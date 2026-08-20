@@ -1,0 +1,15 @@
+{
+  "name": "Stallbuch – Training, Versorgung & Kosten",
+  "short_name": "Stallbuch",
+  "description": "Trainingsplanung, Versorgung und Kosten für Hobbyreiter und ihre Pferde.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#26332A",
+  "theme_color": "#26332A",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

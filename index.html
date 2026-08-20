@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Stallbuch</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#26332A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Stallbuch">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-parchment:#F6F1E4; --forest-deep:#26332A; --forest-mid:#3F5240; --saddle-tan:#C79A6B;
+  --chestnut:#A85C3B; --gold-ribbon:#C9A227; --ink:#21281F; --ink-soft:#5B6255;
+  --cream-card:#FFFCF5; --line:#E3D9C3;
+  --font-display:'Fraunces',serif; --font-body:'Manrope',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{background:linear-gradient(180deg,#1C241D,#0F140F); font-family:var(--font-body); color:var(--ink);
+  display:flex; flex-direction:column; align-items:center; padding:24px 14px 50px; min-height:100vh;}
+button{font-family:var(--font-body); cursor:pointer;}
+input,textarea,select{font-family:var(--font-body);}
+.phone{width:390px; max-width:94vw; height:820px; max-height:90vh; background:var(--bg-parchment);
+  border-radius:44px; border:10px solid #14170F; box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+  overflow:hidden; position:relative; display:flex; flex-direction:column;}
+.notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:22px;
+  background:#14170F; border-radius:0 0 16px 16px; z-index:30;}
+#screen{flex:1; overflow-y:auto; padding:36px 18px 92px;}
+.hidden{display:none !important;}
+
+/* ---- shared ---- */
+.back-row{display:flex; align-items:center; gap:10px; margin-bottom:16px;}
+.back-btn{width:32px; height:32px; border-radius:50%; background:var(--cream-card); border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--forest-deep);}
+.page-title{font-family:var(--font-display); font-size:21px; font-weight:600; color:var(--forest-deep);}
+.section-label{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-soft); margin:0 0 10px 2px;}
+.card{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px;}
+.btn{border:none; border-radius:12px; padding:11px 16px; font-weight:700; font-size:13px;}
+.btn-primary{background:var(--forest-deep); color:#F6F1E4;}
+.btn-gold{background:var(--gold-ribbon); color:#26332A;}
+.btn-ghost{background:var(--cream-card); border:1px solid var(--line); color:var(--forest-deep);}
+.btn-block{width:100%;}
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:11px; font-weight:700; color:var(--ink-soft); margin-bottom:5px; text-transform:uppercase; letter-spacing:.05em;}
+.field input,.field textarea,.field select{width:100%; border:1.5px solid var(--line); border-radius:10px; padding:9px 11px;
+  font-size:13px; background:#fff; color:var(--ink);}
+.field textarea{resize:vertical; min-height:56px;}
+.round-photo{width:76px; height:76px; border-radius:50%; object-fit:cover; background:var(--saddle-tan);
+  display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-size:24px; flex-shrink:0;}
+.photo-pick{position:relative; display:inline-block;}
+.photo-pick input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+.photo-edit-badge{position:absolute; bottom:-2px; right:-2px; width:24px; height:24px; border-radius:50%;
+  background:var(--forest-deep); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; border:2px solid var(--bg-parchment);}
+.chip-row{display:flex; gap:8px; flex-wrap:wrap;}
+.tag{font-size:11px; font-weight:700; padding:6px 11px; border-radius:16px; border:1px solid var(--line);
+  color:var(--ink-soft); background:var(--cream-card);}
+.tag.on{background:var(--saddle-tan); color:#fff; border-color:var(--saddle-tan);}
+.empty-hint{font-size:12px; color:var(--ink-soft); text-align:center; padding:18px 10px;}
+
+/* ---- home ---- */
+.home-header{display:flex; align-items:flex-start; gap:14px; margin-bottom:16px;}
+.avatar-wrap{position:relative; flex-shrink:0; cursor:pointer;}
+.avatar{width:60px; height:60px; border-radius:50%; border:3px solid var(--cream-card); object-fit:cover;
+  box-shadow:0 3px 10px rgba(0,0,0,.18); background:var(--saddle-tan); display:flex; align-items:center;
+  justify-content:center; color:#fff; font-family:var(--font-display); font-size:20px;}
+.who{flex:1; padding-top:4px; cursor:pointer;}
+.who .name{font-family:var(--font-display); font-weight:600; font-size:18px; color:var(--forest-deep); line-height:1.1;}
+.who .sub{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+.quiz-nudge{display:flex; align-items:center; gap:12px; background:var(--gold-ribbon); border-radius:16px;
+  padding:12px 14px; margin-bottom:18px; cursor:pointer;}
+.quiz-nudge .qn-ic{font-size:20px;}
+.quiz-nudge .qn-text{flex:1;}
+.quiz-nudge .qn-text b{display:block; font-size:13px; color:#26332A;}
+.quiz-nudge .qn-text span{font-size:11px; color:#3f3111;}
+.horses-row{display:flex; gap:12px; margin:0 0 18px; overflow-x:auto; padding-bottom:2px;}
+.horse-chip{display:flex; flex-direction:column; align-items:center; gap:5px; flex-shrink:0; width:58px; cursor:pointer;}
+.horse-chip .avatar{width:50px; height:50px; font-size:16px;}
+.horse-chip span{font-size:10.5px; color:var(--ink-soft); font-weight:600; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:56px;}
+.add-chip{width:50px; height:50px; border-radius:50%; border:2px dashed var(--saddle-tan);
+  display:flex; align-items:center; justify-content:center; color:var(--saddle-tan); font-size:20px; cursor:pointer; background:none;}
+.train-week-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:15px 16px; margin-bottom:16px;}
+.tw-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;}
+.tw-title{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); font-weight:700;}
+.tw-count{font-family:var(--font-mono); font-size:17px; color:var(--forest-deep); font-weight:700;}
+.tw-row{display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap;}
+.tw-label{font-size:12.5px; font-weight:700; color:var(--forest-deep); width:64px; flex-shrink:0; display:flex; align-items:center; gap:5px;}
+.tw-dots{display:flex; gap:5px;}
+.tw-dot{width:16px; height:16px; border-radius:50%; border:1.5px solid var(--line); background:#fff;}
+.tw-dot.on{background:var(--forest-mid); border-color:var(--forest-mid);}
+.tw-row.warn .tw-dot.on{background:var(--chestnut); border-color:var(--chestnut);}
+.tw-goal{width:100%; font-size:9.5px; color:var(--chestnut); font-weight:700; margin-left:74px;}
+.tw-nudge{margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);}
+.tw-nudge b{display:block; font-size:12px; color:var(--forest-deep); margin-bottom:3px;}
+.tw-nudge span{font-size:11px; color:var(--ink-soft); line-height:1.45;}
+.reminder-banner{display:flex; gap:10px; align-items:flex-start; background:#FBE9DA; border:1px solid #EFCDA8;
+  border-radius:16px; padding:12px 14px; margin-bottom:16px; cursor:pointer;}
+.reminder-banner .dot{width:8px; height:8px; border-radius:50%; background:var(--chestnut); margin-top:5px; flex-shrink:0;}
+.reminder-banner b{display:block; font-size:13px; color:var(--forest-deep);}
+.reminder-banner span{font-size:12px; color:var(--ink-soft);}
+.fn-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;}
+.fn-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:16px 14px;
+  display:flex; flex-direction:column; gap:22px; min-height:92px; border:1px solid var(--line);}
+.fn-card .ic{font-size:22px;}
+.fn-card .tt{font-weight:700; font-size:13.5px; color:var(--forest-deep);}
+.fn-card .dd{font-size:11px; color:var(--ink-soft); margin-top:2px;}
+.fn-card.wide{grid-column:1/-1; flex-direction:row; align-items:center; gap:14px; min-height:auto;}
+.home-footer{display:flex; justify-content:center; align-items:center; gap:7px; margin-top:4px; font-size:10.5px;
+  color:var(--ink-soft); text-decoration:underline; text-underline-offset:2px;}
+.home-footer span{cursor:pointer;}
+.home-footer .fs-dot{text-decoration:none;}
+
+/* ---- tabs ---- */
+.tab-row{display:flex; gap:7px; margin-bottom:18px; flex-wrap:wrap;}
+.tab{font-size:11.5px; font-weight:700; padding:7px 12px; border-radius:20px; border:1px solid var(--line);
+  color:var(--ink-soft); background:var(--cream-card);}
+.tab.on{background:var(--forest-deep); color:#F6F1E4; border-color:var(--forest-deep);}
+
+/* ---- exercises ---- */
+.plan-scroll{display:flex; gap:10px; overflow-x:auto; margin-bottom:18px; padding-bottom:2px;}
+.plan-chip{flex-shrink:0; min-width:118px; background:var(--cream-card); border:1.5px solid var(--line);
+  border-radius:14px; padding:12px 14px;}
+.plan-chip.on{border-color:var(--gold-ribbon); background:#FBF4DE;}
+.plan-chip .pc-t{font-weight:700; font-size:12.5px; color:var(--forest-deep);}
+.plan-chip .pc-d{font-size:10.5px; color:var(--ink-soft); margin-top:3px;}
+.exercise-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; overflow:hidden; margin-bottom:14px;}
+.ex-img{height:110px; background:linear-gradient(135deg,#DCC9A3,#B98E5F); display:flex; align-items:center; justify-content:center; font-size:32px;}
+.ex-body{padding:13px 15px 15px;}
+.ex-title{font-weight:700; font-size:14px; color:var(--forest-deep); display:flex; justify-content:space-between; align-items:center;}
+.ex-meta{font-family:var(--font-mono); font-size:10.5px; color:var(--chestnut);}
+.ex-tag-mini{display:inline-block; font-family:var(--font-mono); font-size:9.5px; color:var(--forest-deep);
+  background:#EAF0E7; padding:2px 7px; border-radius:6px; margin-top:6px;}
+.ex-why{margin-top:8px; background:#F0ECDD; border-left:3px solid var(--saddle-tan); border-radius:6px;
+  padding:8px 10px; font-size:11.5px; color:var(--ink-soft); line-height:1.45;}
+.ex-why b{color:var(--forest-deep);}
+.log-btn{margin-top:10px; width:100%; background:var(--forest-deep); color:#F6F1E4; border:none; border-radius:9px; padding:8px; font-size:11.5px; font-weight:700;}
+
+.suggest-item{display:flex; align-items:center; gap:11px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:12px; padding:11px 12px; margin-bottom:8px; cursor:pointer;}
+.suggest-item.on{border-color:var(--forest-mid); background:#EAF0E7;}
+.sug-check{width:18px; height:18px; border-radius:6px; border:1.5px solid var(--saddle-tan); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff;}
+.suggest-item.on .sug-check{background:var(--forest-mid); border-color:var(--forest-mid);}
+.sug-info .st{font-weight:700; font-size:12.5px; color:var(--forest-deep);}
+.sug-info .sd{font-size:10.5px; color:var(--ink-soft);}
+.plan-preview{background:var(--forest-deep); color:#F6F1E4; border-radius:16px; padding:14px 16px; margin-top:16px;}
+.plan-preview .pp-title{font-family:var(--font-display); font-size:14px; font-weight:600; margin-bottom:6px;}
+.plan-preview .pp-list{font-size:11.5px; opacity:.85; line-height:1.5; margin-bottom:10px;}
+
+/* ---- arena ---- */
+.arena-card{background:var(--forest-deep); border-radius:18px; padding:16px; color:#F6F1E4; margin-bottom:16px;}
+.arena-card .tt{font-family:var(--font-display); font-size:15px; font-weight:600; margin-bottom:10px;}
+.arena-grid{background:#3B4A3B; border-radius:10px; height:190px; position:relative; cursor:crosshair;
+  background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 25px),
+  repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, transparent 1px 25px); margin-bottom:10px; overflow:hidden;}
+.obstacle{position:absolute; width:28px; height:16px; background:var(--gold-ribbon); border-radius:3px;
+  box-shadow:0 2px 4px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:9px; color:#26332A; font-weight:700; transform:translate(-50%,-50%);}
+.arena-actions{display:flex; gap:8px;}
+.mini-btn{flex:1; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:#F6F1E4;
+  border-radius:10px; padding:9px; font-size:11px; font-weight:700; text-align:center; border:none;}
+.mini-btn.gold{background:var(--gold-ribbon); color:#26332A;}
+.arena-hint{font-size:10.5px; opacity:.7; margin-bottom:10px;}
+
+/* ---- history ---- */
+.hist-row{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:14px; padding:11px 12px; margin-bottom:8px;}
+.hist-ic{width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;}
+.hist-ic.rider{background:#F3E6D6; color:var(--chestnut);}
+.hist-ic.horse{background:#EAF0E7; color:var(--forest-mid);}
+.hist-info{flex:1;}
+.hist-info .ht{font-weight:700; font-size:12.5px; color:var(--forest-deep);}
+.hist-info .hd{font-size:10.5px; color:var(--ink-soft);}
+.hist-del{font-size:14px; color:var(--ink-soft); flex-shrink:0;}
+
+/* ---- calendar ---- */
+.cal-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:16px; margin-bottom:18px;}
+.cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+.cal-head .cm{font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--forest-deep);}
+.cal-nav{display:flex; gap:6px;}
+.cal-nav div{width:24px; height:24px; border-radius:50%; background:#F0ECDD; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--forest-deep);}
+.cal-weekdays{display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:6px;}
+.cal-weekdays div{font-size:9.5px; color:var(--ink-soft); font-weight:700;}
+.cal-days{display:grid; grid-template-columns:repeat(7,1fr); row-gap:6px;}
+.cal-day{aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-size:11px; color:var(--ink); border-radius:9px; position:relative; gap:2px;}
+.cal-day.muted{color:#C9C2AC;}
+.cal-day.today{background:var(--forest-deep); color:#F6F1E4; font-weight:700;}
+.cal-day .mark{width:4px; height:4px; border-radius:50%; background:var(--chestnut);}
+.cal-day.today .mark{background:var(--gold-ribbon);}
+.add-termin{display:flex; align-items:center; justify-content:center; gap:6px; border:1.5px dashed var(--saddle-tan);
+  border-radius:12px; padding:10px; color:var(--chestnut); font-size:12px; font-weight:700; margin-top:14px; background:none; width:100%;}
+.termin-row{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:14px; padding:11px 12px; margin-bottom:8px;}
+.termin-date{width:42px; text-align:center; flex-shrink:0; background:#F0ECDD; border-radius:9px; padding:5px 0; font-family:var(--font-mono);}
+.termin-date .dd2{font-size:14px; font-weight:700; color:var(--forest-deep); line-height:1;}
+.termin-date .mm{font-size:8.5px; color:var(--ink-soft); text-transform:uppercase;}
+.termin-info{flex:1;}
+.termin-info .tn{font-weight:700; font-size:12.5px; color:var(--forest-deep);}
+.termin-info .tr{font-size:11px; color:var(--ink-soft);}
+
+/* ---- costs ---- */
+.guide-banner{background:var(--forest-deep); color:#F6F1E4; border-radius:16px; padding:14px 16px; margin-bottom:16px;}
+.guide-banner .gt{font-family:var(--font-display); font-size:15px; font-weight:600; margin-bottom:4px;}
+.guide-banner .gd{font-size:11px; opacity:.8; line-height:1.4;}
+.check-item{background:var(--cream-card); border:1px solid var(--line); border-radius:12px; padding:11px 12px; margin-bottom:7px;}
+.check-item-top{display:flex; align-items:center; gap:11px; cursor:pointer;}
+.check-box{width:18px; height:18px; border-radius:6px; border:1.5px solid var(--saddle-tan); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff;}
+.check-item.on .check-box{background:var(--forest-mid); border-color:var(--forest-mid);}
+.check-item .ct{flex:1; font-size:12.5px; color:var(--ink); font-weight:600;}
+.check-item.on .ct{color:var(--forest-deep); font-weight:700;}
+.entry-row{display:flex; align-items:center; gap:8px; margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);}
+.entry-row input{flex:1; border:1px solid var(--line); border-radius:8px; padding:7px 9px; font-family:var(--font-mono); font-size:12px;}
+.freq-toggle{display:flex; gap:5px;}
+.freq-chip{font-size:9.5px; font-weight:700; padding:6px 8px; border-radius:8px; border:1px solid var(--line);
+  color:var(--ink-soft); background:#fff;}
+.freq-chip.on{background:var(--forest-deep); color:#F6F1E4; border-color:var(--forest-deep);}
+.cost-summary{display:flex; justify-content:space-between; align-items:baseline; margin:16px 2px 10px;}
+.cost-summary .cs-label{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em;}
+.cost-summary .cs-val{font-family:var(--font-mono); font-size:19px; color:var(--forest-deep); font-weight:600;}
+.cost-row{display:flex; align-items:center; gap:10px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:12px; padding:9px 12px; margin-bottom:6px;}
+.cost-row .cr-name{flex:1; font-size:12px; font-weight:600; color:var(--forest-deep);}
+.cost-row .cr-val{font-family:var(--font-mono); font-size:12px; color:var(--chestnut); font-weight:700;}
+
+/* ---- contacts ---- */
+.contact-group{margin-bottom:18px;}
+.group-title{font-size:10.5px; font-weight:700; color:var(--chestnut); text-transform:uppercase; letter-spacing:.08em; margin:0 0 8px 2px;}
+.contact-row{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:14px; padding:11px 12px; margin-bottom:8px;}
+.contact-ic{width:38px; height:38px; border-radius:50%; background:var(--forest-deep); color:#F6F1E4;
+  display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
+.contact-info{flex:1; min-width:0;}
+.contact-info .cn{font-weight:700; font-size:13px; color:var(--forest-deep);}
+.contact-info .cr{font-size:11px; color:var(--ink-soft);}
+.call-btn{width:32px; height:32px; border-radius:50%; background:#EAF0E7; border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;}
+.add-contact{display:flex; align-items:center; justify-content:center; gap:6px; border:1.5px dashed var(--saddle-tan);
+  border-radius:14px; padding:12px; color:var(--chestnut); font-size:12px; font-weight:700; margin-top:4px; background:none; width:100%;}
+
+/* ---- quiz ---- */
+.quiz-hero{background:linear-gradient(135deg,var(--forest-deep),#3A4A3B); border-radius:20px; padding:18px; color:#F6F1E4; margin-bottom:18px;}
+.quiz-hero .day{font-family:var(--font-mono); font-size:10.5px; opacity:.7; text-transform:uppercase; letter-spacing:.1em;}
+.quiz-hero .qtitle{font-family:var(--font-display); font-size:19px; font-weight:600; margin:4px 0 12px;}
+.quiz-progress-row{display:flex; gap:5px;}
+.qp-dot{flex:1; height:5px; border-radius:4px; background:rgba(255,255,255,.2);}
+.qp-dot.done{background:var(--gold-ribbon);}
+.qcard{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:18px; margin-bottom:16px;}
+.qcard .qn{font-family:var(--font-mono); font-size:10px; color:var(--chestnut); text-transform:uppercase; letter-spacing:.08em;}
+.qcard .qtext{font-weight:700; font-size:14.5px; color:var(--forest-deep); margin:6px 0 14px; line-height:1.35;}
+.opt{display:flex; align-items:center; gap:10px; padding:11px 12px; border:1.5px solid var(--line); border-radius:12px;
+  margin-bottom:8px; font-size:12.5px; color:var(--ink);}
+.opt.correct{border-color:var(--forest-mid); background:#EAF0E7; font-weight:700; color:var(--forest-deep);}
+.opt.wrong{border-color:var(--chestnut); background:#FBE9DA;}
+.opt .dotc{width:16px; height:16px; border-radius:50%; border:1.5px solid var(--saddle-tan); flex-shrink:0;}
+.opt.correct .dotc{background:var(--forest-mid); border-color:var(--forest-mid);}
+.opt.wrong .dotc{background:var(--chestnut); border-color:var(--chestnut);}
+.badges-row{display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;}
+.badge-pill{flex:1; min-width:80px; background:var(--cream-card); border:1px solid var(--line); border-radius:14px; padding:12px 8px; text-align:center;}
+.badge-pill .bi{font-size:20px;}
+.badge-pill .bt{font-size:9px; font-weight:700; color:var(--ink-soft); margin-top:4px;}
+.qlevel-card{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;}
+.qlevel-card .ql-t{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; font-weight:700;}
+.qlevel-card .ql-v{font-family:var(--font-display); font-size:17px; color:var(--forest-deep); font-weight:600; margin-top:2px;}
+.qlevel-card .ql-n{font-family:var(--font-mono); font-size:20px; color:var(--gold-ribbon);}
+
+/* ---- legal ---- */
+.legal-block{margin-bottom:20px;}
+.legal-block .lt{font-size:11px; font-weight:700; color:var(--chestnut); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;}
+.legal-block p{font-size:12px; color:var(--ink); line-height:1.6; margin:0 0 4px;}
+.dev-card{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:16px; padding:14px; margin-top:6px;}
+.dev-avatar{width:44px; height:44px; border-radius:50%; background:var(--forest-deep); color:#F6F1E4;
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:16px; flex-shrink:0;}
+.dev-info .dn{font-weight:700; font-size:13px; color:var(--forest-deep);}
+.dev-info .de{font-size:11px; color:var(--ink-soft);}
+
+/* ---- onboarding ---- */
+.onb-wrap{position:absolute; inset:0; background:var(--bg-parchment); z-index:40; display:flex; flex-direction:column;
+  padding:36px 22px 30px; color:var(--ink); overflow-y:auto;}
+.onb-helper{width:64px; height:64px; border-radius:50%; background:var(--forest-deep); display:flex; align-items:center;
+  justify-content:center; font-size:28px; margin-bottom:16px; box-shadow:0 6px 16px rgba(0,0,0,.12); border:3px solid var(--cream-card);}
+.onb-bubble{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:18px; font-size:13.5px; line-height:1.55; color:var(--ink);}
+.onb-bubble b{color:var(--chestnut);}
+.onb-title{font-family:var(--font-display); font-size:22px; font-weight:600; margin-bottom:6px; color:var(--forest-deep);}
+.onb-sub{font-size:12px; color:var(--ink-soft); margin-bottom:18px;}
+.onb-list{list-style:none; padding:0; margin:0 0 20px;}
+.onb-list li{display:flex; gap:10px; align-items:flex-start; font-size:12.5px; margin-bottom:10px; color:var(--ink);
+  background:var(--cream-card); border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
+.onb-list li .oi{font-size:16px;}
+.onb-list li b{color:var(--forest-deep);}
+.onb-progress{display:flex; gap:5px; margin-bottom:20px;}
+.onb-progress div{flex:1; height:4px; border-radius:3px; background:var(--line);}
+.onb-progress div.on{background:var(--gold-ribbon);}
+.onb-spacer{flex:1;}
+.onb-actions{display:flex; gap:10px;}
+.onb-field input{width:100%; border:1.5px solid var(--line); border-radius:12px; padding:12px 14px; font-size:14px;
+  margin-bottom:14px; background:#fff; color:var(--ink);}
+.onb-skip{text-align:center; font-size:11.5px; color:var(--ink-soft); margin-top:10px; text-decoration:underline; cursor:pointer;}
+
+.navbar{position:absolute; bottom:0; left:0; right:0; height:64px; background:var(--cream-card); border-top:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-around; padding-bottom:6px; z-index:10;}
+.nav-item{display:flex; flex-direction:column; align-items:center; gap:2px; font-size:9px; color:var(--ink-soft);}
+.nav-item.on{color:var(--forest-deep); font-weight:700;}
+.nav-item .ni{font-size:17px;}
+.lab{color:#D8CFB6; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:14px; opacity:.7;}
+.reset-link{color:#D8CFB6; font-family:var(--font-mono); font-size:10px; margin-top:16px; opacity:.5; text-decoration:underline; cursor:pointer;}
+
+/* ---- modal ---- */
+.modal-overlay{position:absolute; inset:0; background:rgba(20,23,15,.55); z-index:50; display:flex; align-items:flex-end; justify-content:center;}
+.modal-sheet{width:100%; background:var(--bg-parchment); border-radius:24px 24px 0 0; padding:22px 20px 26px;
+  max-height:85%; overflow-y:auto; box-shadow:0 -10px 30px rgba(0,0,0,.25);}
+.modal-title{font-family:var(--font-display); font-size:18px; font-weight:600; color:var(--forest-deep); margin-bottom:14px;}
+.modal-actions{display:flex; gap:10px; margin-top:6px;}
+.toast{position:absolute; left:50%; bottom:80px; transform:translateX(-50%); background:var(--forest-deep); color:#F6F1E4;
+  padding:11px 18px; border-radius:20px; font-size:12.5px; font-weight:600; z-index:60; box-shadow:0 6px 16px rgba(0,0,0,.3);
+  animation:toastIn .25s ease;}
+@keyframes toastIn{from{opacity:0; transform:translate(-50%,10px);} to{opacity:1; transform:translate(-50%,0);}}
+</style>
+</head>
+<body>
+<div class="lab">Stallbuch</div>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div id="onboarding" class="onb-wrap hidden"></div>
+  <div id="modal-root"></div>
+  <div id="screen"></div>
+  <div id="navbar" class="navbar hidden">
+    <div class="nav-item" data-nav="home" onclick="Nav.go('home')"><div class="ni">🏠</div>Home</div>
+    <div class="nav-item" data-nav="training" onclick="Nav.go('training')"><div class="ni">🏇</div>Training</div>
+    <div class="nav-item" data-nav="care" onclick="Nav.go('care')"><div class="ni">🩺</div>Versorgung</div>
+    <div class="nav-item" data-nav="costs" onclick="Nav.go('costs')"><div class="ni">💶</div>Kosten</div>
+    <div class="nav-item" data-nav="quiz" onclick="Nav.go('quiz')"><div class="ni">🎯</div>Quiz</div>
+  </div>
+</div>
+<div class="reset-link" onclick="App.resetAll()">App zurücksetzen (Demo)</div>
+
+<script>
+/* ============================= DATA / STORAGE ============================= */
+const DEFAULT_STATE = {
+  onboarded:false,
+  profile:{name:'', level:'Einsteiger', photo:null},
+  horses:[],
+  trainings:[],      // {id,kind:'reiter'|'pferd', title, minutes, date, category}
+  appointments:[],   // {id, title, date, horseId, notes}
+  feeding:{},         // {horseId: text}
+  costs:[],          // {id, key, label, amount, freq, date}
+  costChecks:{},      // {key:true}
+  contacts:[],        // {id, group, name, role, phone}
+  quiz:{lastDoneDate:null, points:0, correctByCat:{fuetterung:0,kosten:0,training:0}, badges:[]},
+};
+
+let S = structuredClone(DEFAULT_STATE);
+
+async function loadState(){
+  try{
+    const raw = localStorage.getItem('stallbuch-state');
+    if(raw){ S = Object.assign(structuredClone(DEFAULT_STATE), JSON.parse(raw)); }
+  }catch(e){ /* keine gespeicherten Daten vorhanden */ }
+}
+async function saveState(){
+  try{ localStorage.setItem('stallbuch-state', JSON.stringify(S)); }catch(e){ console.error('Speichern fehlgeschlagen', e); }
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(iso){ const d=new Date(iso+'T00:00:00'); return d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'}); }
+function euro(n){ return n.toLocaleString('de-DE',{minimumFractionDigits:2, maximumFractionDigits:2})+' €'; }
+
+/* ============================= STATIC CONTENT ============================= */
+const RIDER_EXERCISES = [
+  {id:'core1', cat:'Rumpf', label:'Rumpf', title:'Unterarmstütz (Plank)', meta:'3×30 Sek.', img:'🧘',
+    why:'Ein stabiler Rumpf ermöglicht einen unabhängigen Sitz und entlastet den Pferderücken bei jeder Bewegung.'},
+  {id:'core2', cat:'Rumpf', label:'Rumpf', title:'Seitstütz', meta:'2×20 Sek./Seite', img:'🧘',
+    why:'Trainiert die seitliche Rumpfmuskulatur – wichtig, um in Wendungen nicht aus dem Sitz zu kippen.'},
+  {id:'leg1', cat:'Bein & Sitz', label:'Bein & Sitz', title:'Kniebeugen', meta:'3×12 Wdh.', img:'🦵',
+    why:'Kräftige, ruhige Beine verhindern unbeabsichtigte Hilfen und geben dem Pferd klare Signale.'},
+  {id:'leg2', cat:'Bein & Sitz', label:'Bein & Sitz', title:'Ausfallschritte', meta:'2×10 pro Bein', img:'🦵',
+    why:'Verbessert die Stabilität im Sattel und die unabhängige Beinhaltung.'},
+  {id:'bal1', cat:'Balance', label:'Balance', title:'Einbeinstand', meta:'2×45 Sek.', img:'🤸',
+    why:'Trainiert das Ausgleichen von Bewegung, wie es beim Reiten ständig gefordert wird.'},
+  {id:'bal2', cat:'Balance', label:'Balance', title:'Balance-Kissen Stand', meta:'2×40 Sek.', img:'🤸',
+    why:'Schult die Tiefenmuskulatur, die für einen ruhigen, mitschwingenden Sitz sorgt.'},
+  {id:'mob1', cat:'Beweglichkeit', label:'Beweglichkeit', title:'Hüftöffner', meta:'2×30 Sek./Seite', img:'🤾',
+    why:'Bewegliche Hüften lassen dich mit der Pferdebewegung mitschwingen statt dagegen zu arbeiten.'},
+  {id:'mob2', cat:'Beweglichkeit', label:'Beweglichkeit', title:'Wirbelsäulenrotation', meta:'2×10 Wdh.', img:'🤾',
+    why:'Erhält die Beweglichkeit des Oberkörpers für feine, unabhängige Hilfengebung.'},
+];
+const RIDER_PLANS = [
+  {id:'plan15', title:'15-Min-Reiterfit', desc:'Ganzkörper · kurz', ex:['core1','leg1','bal1','mob1']},
+  {id:'plancore', title:'Rumpf-Fokus', desc:'4 Übungen', ex:['core1','core2','bal1','bal2']},
+  {id:'planmob', title:'Beweglichkeit', desc:'vor dem Reiten', ex:['mob1','mob2','bal1']},
+];
+const HORSE_SUGGESTIONS = {
+  Dressur:[{id:'d1',title:'Schritt-Aufwärmen',desc:'10 Min · lockere Anlehnung'},
+    {id:'d2',title:'Zirkel verkleinern/vergrößern',desc:'Trab · Biegung fördern'},
+    {id:'d3',title:'Übergänge Trab/Galopp',desc:'Durchlässigkeit'},
+    {id:'d4',title:'Schulterherein',desc:'Geraderichtung'}],
+  Springen:[{id:'s1',title:'Trab-Aufwärmen',desc:'10 Min lockere Anlehnung'},
+    {id:'s2',title:'Cavaletti-Arbeit',desc:'Rhythmus & Absprung'},
+    {id:'s3',title:'Einzelsprünge',desc:'Übergang zu Kombinationen'},
+    {id:'s4',title:'Kleiner Parcours',desc:'Linienreiten üben'}],
+  Bodenarbeit:[{id:'b1',title:'Führigkeit am Kappzaum',desc:'Grundvertrauen'},
+    {id:'b2',title:'Stangenarbeit',desc:'Koordination'},
+    {id:'b3',title:'Handwechsel & Halt',desc:'Aufmerksamkeit'},
+    {id:'b4',title:'Longenarbeit',desc:'Takt & Losgelassenheit'}],
+};
+const COST_GUIDE = [
+  {key:'box', label:'Boxenmiete / Pension', icon:'🏠', defFreq:'monatlich'},
+  {key:'futter', label:'Futter & Zusatzfutter', icon:'🌾', defFreq:'monatlich'},
+  {key:'schmied', label:'Hufschmied', icon:'🔨', defFreq:'einmalig'},
+  {key:'tierarzt', label:'Tierarzt & Versicherung', icon:'🩺', defFreq:'monatlich'},
+  {key:'ausruestung', label:'Ausrüstung / Sattelzeug', icon:'🎽', defFreq:'einmalig'},
+  {key:'unterricht', label:'Reitunterricht', icon:'🎓', defFreq:'monatlich'},
+  {key:'turnier', label:'Turniere & Startgelder', icon:'🏆', defFreq:'einmalig'},
+  {key:'auto', label:'Auto: Sprit & Unterhalt', icon:'🚗', defFreq:'monatlich'},
+  {key:'haenger', label:'Pferdehänger: Anschaffung/Miete', icon:'🚚', defFreq:'einmalig'},
+  {key:'haenger_tuev', label:'Hänger: Versicherung & TÜV', icon:'📋', defFreq:'einmalig'},
+];
+const CONTACT_GROUPS = ['Stall & Training','Tierärztlich','Ausrüstung & Sonstiges'];
+const CONTACT_ICONS = {'Stall & Training':'🏠','Tierärztlich':'🩺','Ausrüstung & Sonstiges':'🧵'};
+
+const KNOWLEDGE_QUESTIONS = [
+  {q:'Warum ist Rumpfstabilität für Reiter wichtig?', opts:['Für schnelleres Aufsteigen','Ermöglicht unabhängigen Sitz & entlastet den Pferderücken','Nur für den Wettkampf wichtig'], correct:1, cat:'training'},
+  {q:'Wie lange sollte ein Pferd im Schritt aufgewärmt werden?', opts:['1–2 Minuten','Ca. 10 Minuten','Aufwärmen ist nicht nötig'], correct:1, cat:'training'},
+  {q:'Was fördert Zirkel verkleinern/vergrößern beim Pferd?', opts:['Die Biegung','Die Sprungkraft','Nur die Ausdauer'], correct:0, cat:'training'},
+  {q:'Wie oft sollte Reitertraining mindestens stattfinden?', opts:['1× im Monat','Mindestens 2× pro Woche','Nur vor Turnieren'], correct:1, cat:'training'},
+  {q:'Was ist die Basis für sicheres Führen von Pferden?', opts:['Lautes Rufen','Ruhiges, konsequentes Auftreten','Schnelle Bewegungen'], correct:1, cat:'training'},
+  {q:'Wie viel Wasser braucht ein Pferd täglich ungefähr?', opts:['ca. 5 Liter','ca. 30–50 Liter','ca. 200 Liter'], correct:1, cat:'fuetterung'},
+  {q:'Was sollte den Großteil der Pferdefütterung ausmachen?', opts:['Kraftfutter','Raufutter (Heu)','Leckerlis'], correct:1, cat:'fuetterung'},
+  {q:'Was ist vor intensivem Training beim Reiter sinnvoll?', opts:['Große Mahlzeit','Ausreichend Flüssigkeit & leichte Energie','Auf Essen verzichten'], correct:1, cat:'fuetterung'},
+  {q:'Wie oft sollte ein Pferd grundsätzlich gefüttert werden?', opts:['1× täglich große Portion','Mehrere kleine Portionen über den Tag','Nur am Wochenende'], correct:1, cat:'fuetterung'},
+];
+
+/* ============================= RENDER HELPERS ============================= */
+function screenEl(){ return document.getElementById('screen'); }
+function esc(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function initials(name){ if(!name) return '?'; return name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function avatarHTML(photo, name, size){
+  if(photo) return `<img class="avatar" src="${photo}" style="width:${size}px;height:${size}px;">`;
+  return `<div class="avatar" style="width:${size}px;height:${size}px;">${esc(initials(name))}</div>`;
+}
+function weekTrainingCounts(){
+  const now = new Date(); const day = (now.getDay()+6)%7; // Mo=0
+  const monday = new Date(now); monday.setDate(now.getDate()-day); monday.setHours(0,0,0,0);
+  let pferd=0, reiter=0;
+  S.trainings.forEach(t=>{ const d=new Date(t.date+'T00:00:00'); if(d>=monday){ if(t.kind==='pferd') pferd++; else reiter++; } });
+  return {pferd, reiter};
+}
+function upcomingAppointment(){
+  const today = todayISO();
+  const upcoming = S.appointments.filter(a=>a.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
+  return upcoming[0]||null;
+}
+function daysUntil(iso){
+  const diff = Math.round((new Date(iso+'T00:00:00') - new Date(todayISO()+'T00:00:00'))/86400000);
+  if(diff<=0) return 'heute';
+  if(diff===1) return 'morgen';
+  return `in ${diff} Tagen`;
+}
+function monthCostTotal(){
+  const ym = todayISO().slice(0,7);
+  return S.costs.filter(c=>c.date.slice(0,7)===ym).reduce((s,c)=>s+Number(c.amount||0),0);
+}
+
+/* ============================= MODAL SYSTEM ============================= */
+const Modal = {};
+Modal.close = function(){ document.getElementById('modal-root').innerHTML=''; };
+Modal.form = function(title, fields, onSubmit, submitLabel){
+  const root = document.getElementById('modal-root');
+  const fieldsHTML = fields.map(f=>{
+    if(f.type==='select'){
+      return `<div class="field"><label>${f.label}</label><select id="mf-${f.id}">
+        ${f.options.map(o=>`<option value="${esc(o.value)}" ${f.value===o.value?'selected':''}>${esc(o.label)}</option>`).join('')}
+      </select></div>`;
+    }
+    return `<div class="field"><label>${f.label}</label><input id="mf-${f.id}" type="${f.type||'text'}" value="${esc(f.value||'')}" placeholder="${esc(f.placeholder||'')}"></div>`;
+  }).join('');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) Modal.close()">
+      <div class="modal-sheet">
+        <div class="modal-title">${title}</div>
+        ${fieldsHTML}
+        <div class="modal-actions">
+          <button class="btn btn-ghost" style="flex:1;" onclick="Modal.close()">Abbrechen</button>
+          <button class="btn btn-primary" style="flex:2;" id="mf-submit">${submitLabel||'Speichern'}</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('mf-submit').onclick = function(){
+    const values = {};
+    fields.forEach(f=>{ values[f.id] = document.getElementById('mf-'+f.id).value.trim(); });
+    onSubmit(values);
+  };
+};
+Modal.confirm = function(text, onYes){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) Modal.close()">
+      <div class="modal-sheet">
+        <div class="modal-title">Bist du sicher?</div>
+        <p style="font-size:13px; color:var(--ink-soft); line-height:1.5;">${esc(text)}</p>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" style="flex:1;" onclick="Modal.close()">Abbrechen</button>
+          <button class="btn btn-primary" style="flex:1;" id="mc-yes">Ja, entfernen</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('mc-yes').onclick = function(){ Modal.close(); onYes(); };
+};
+Modal.toast = function(msg){
+  const root = document.getElementById('modal-root');
+  const el = document.createElement('div');
+  el.className='toast'; el.textContent=msg;
+  root.appendChild(el);
+  setTimeout(()=>{ el.remove(); }, 2200);
+};
+
+/* ============================= NAV ============================= */
+const Nav = { current:'home', trainTab:'rider', arenaMode:'Springen', arenaObstacles:[], arenaCounter:0,
+  horseTab:'Dressur', horseSelected:{}, quizSet:null, quizIndex:0, quizAnswers:[] };
+Nav.go = function(screen, param){
+  Nav.current = screen;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('on', n.dataset.nav===screen));
+  const map = {home:Screens.home, training:Screens.training, care:Screens.care, costs:Screens.costs,
+    contacts:Screens.contacts, quiz:Screens.quiz, profile:Screens.profile, horse:Screens.horse, legal:Screens.legal};
+  const navbar = document.getElementById('navbar');
+  navbar.classList.toggle('hidden', !['home','training','care','costs','quiz'].includes(screen));
+  (map[screen]||Screens.home)(param);
+  screenEl().scrollTop = 0;
+};
+
+/* ============================= SCREENS ============================= */
+const Screens = {};
+
+Screens.home = function(){
+  const wk = weekTrainingCounts();
+  const nextAppt = upcomingAppointment();
+  const quizDoneToday = S.quiz.lastDoneDate === todayISO();
+  const horsesHTML = S.horses.map(h=>`
+    <div class="horse-chip" onclick="Nav.go('horse','${h.id}')">
+      ${avatarHTML(h.photo, h.name, 50)}
+      <span>${esc(h.name)}</span>
+    </div>`).join('');
+
+  screenEl().innerHTML = `
+    <div class="home-header">
+      <div class="avatar-wrap" onclick="Nav.go('profile')">${avatarHTML(S.profile.photo, S.profile.name, 60)}</div>
+      <div class="who" onclick="Nav.go('profile')">
+        <div class="name">Hallo, ${esc(S.profile.name||'Reiter')}</div>
+        <div class="sub">Reiterlevel: ${esc(S.profile.level)}</div>
+      </div>
+    </div>
+
+    ${!quizDoneToday ? `
+    <div class="quiz-nudge" onclick="Nav.go('quiz')">
+      <div class="qn-ic">🎯</div>
+      <div class="qn-text"><b>Quiz heute noch offen</b><span>5 Fragen warten auf dich</span></div>
+      <div>›</div>
+    </div>` : ''}
+
+    <div class="horses-row">
+      ${horsesHTML}
+      <button class="add-chip" onclick="Nav.go('horse','new')">+</button>
+    </div>
+
+    <div class="train-week-card">
+      <div class="tw-head"><div class="tw-title">Diese Woche trainiert</div><div class="tw-count">${wk.pferd+wk.reiter}×</div></div>
+      <div class="tw-row">
+        <div class="tw-label">🏇 Pferd</div>
+        <div class="tw-dots">${dotsRow(wk.pferd,5,false)}</div>
+      </div>
+      <div class="tw-row ${wk.reiter<2?'warn':''}">
+        <div class="tw-label">💪 Reiter</div>
+        <div class="tw-dots">${dotsRow(wk.reiter,2,true)}</div>
+        <div class="tw-goal">Ziel: min. 2×/Woche</div>
+      </div>
+      ${wk.reiter<2 ? `<div class="tw-nudge"><b>Reitertraining nicht vergessen!</b>
+        <span>Ein starker, stabiler Reiter entlastet den Pferderücken und sitzt unabhängiger – gerade das wird im Alltag am schnellsten vernachlässigt.</span></div>` : ''}
+    </div>
+
+    ${nextAppt ? `
+    <div class="reminder-banner" onclick="Nav.go('care')">
+      <div class="dot"></div>
+      <div><b>${esc(nextAppt.title)} – ${daysUntil(nextAppt.date)}</b><span>${esc(horseName(nextAppt.horseId))} · Termin ${fmtDate(nextAppt.date)}</span></div>
+    </div>` : ''}
+
+    <div class="section-label">Bereiche</div>
+    <div class="fn-grid">
+      <div class="fn-card" onclick="Nav.go('training')"><div class="ic">🏇</div><div><div class="tt">Training</div><div class="dd">Pferd & Reiter</div></div></div>
+      <div class="fn-card" onclick="Nav.go('care')"><div class="ic">🩺</div><div><div class="tt">Versorgung</div><div class="dd">Termine & Futter</div></div></div>
+      <div class="fn-card" onclick="Nav.go('costs')"><div class="ic">💶</div><div><div class="tt">Kosten</div><div class="dd">Ausgaben im Blick</div></div></div>
+      <div class="fn-card" onclick="Nav.go('contacts')"><div class="ic">📇</div><div><div class="tt">Kontakte</div><div class="dd">Stall, Ärzte & Co.</div></div></div>
+      <div class="fn-card" onclick="Screens.nutritionInfo()"><div class="ic">🥕</div><div><div class="tt">Ernährung</div><div class="dd">Tipps Pferd & Du</div></div></div>
+      <div class="fn-card wide" onclick="Nav.go('quiz')"><div class="ic">🎯</div><div><div class="tt">Tägliches Quiz</div><div class="dd">${quizDoneToday?'Heute schon erledigt ✓':'5 neue Fragen warten auf dich'}</div></div></div>
+    </div>
+
+    <div class="home-footer">
+      <span onclick="Nav.go('legal')">Impressum</span><span class="fs-dot">·</span><span onclick="Nav.go('legal')">Kontakt zum Entwickler</span>
+    </div>
+  `;
+};
+function dotsRow(count,total,warnColor){
+  let html='';
+  for(let i=0;i<Math.max(total,count);i++){ html+=`<div class="tw-dot ${i<count?'on':''}"></div>`; }
+  return html;
+}
+function horseName(id){ const h=S.horses.find(x=>x.id===id); return h?h.name:'—'; }
+
+/* ---- PROFILE ---- */
+Screens.profile = function(){
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Mein Profil</div></div>
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+      <div class="photo-pick">
+        ${avatarHTML(S.profile.photo, S.profile.name, 76)}
+        <input type="file" accept="image/*" onchange="App.handlePhoto(event,'profile')">
+        <div class="photo-edit-badge">✎</div>
+      </div>
+      <div style="font-size:11.5px; color:var(--ink-soft);">Foto antippen zum Ändern</div>
+    </div>
+    <div class="field"><label>Name</label><input id="pf-name" value="${esc(S.profile.name)}" placeholder="Dein Name"></div>
+    <div class="field"><label>Reiterlevel</label>
+      <select id="pf-level">
+        ${['Einsteiger','Fortgeschritten','Erfahren','Profi'].map(l=>`<option ${S.profile.level===l?'selected':''}>${l}</option>`).join('')}
+      </select>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="App.saveProfile()">Speichern</button>
+  `;
+};
+
+/* ---- HORSE ---- */
+Screens.horse = function(id){
+  const isNew = id==='new';
+  const h = isNew ? {id:uid(), name:'', type:'', age:'', notes:'', photo:null} : S.horses.find(x=>x.id===id);
+  if(!h) return Nav.go('home');
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">${isNew?'Pferd hinzufügen':esc(h.name)}</div></div>
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+      <div class="photo-pick">
+        ${avatarHTML(h.photo, h.name||'🐴', 76)}
+        <input type="file" accept="image/*" onchange="App.handleHorsePhoto(event,'${h.id}', ${isNew})">
+        <div class="photo-edit-badge">✎</div>
+      </div>
+      <div style="font-size:11.5px; color:var(--ink-soft);">Foto antippen zum Ändern</div>
+    </div>
+    <div class="field"><label>Name</label><input id="hs-name" value="${esc(h.name)}" placeholder="z. B. Luna"></div>
+    <div class="field"><label>Rasse / Typ</label><input id="hs-type" value="${esc(h.type)}" placeholder="z. B. Pony, Warmblut"></div>
+    <div class="field"><label>Alter</label><input id="hs-age" value="${esc(h.age)}" placeholder="z. B. 9 Jahre"></div>
+    <div class="field"><label>Besonderheiten</label><textarea id="hs-notes" placeholder="z. B. Futterunverträglichkeiten">${esc(h.notes)}</textarea></div>
+    <button class="btn btn-primary btn-block" onclick="App.saveHorse('${h.id}', ${isNew})">Speichern</button>
+    ${!isNew? `<button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="App.deleteHorse('${h.id}')">Pferd entfernen</button>`:''}
+  `;
+};
+
+/* ---- TRAINING ---- */
+Screens.training = function(){
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Training</div></div>
+    <div class="tab-row">
+      <div class="tab ${Nav.trainTab==='rider'?'on':''}" onclick="Screens.trainTab('rider')">Reiter</div>
+      <div class="tab ${Nav.trainTab==='horse'?'on':''}" onclick="Screens.trainTab('horse')">Pferd</div>
+      <div class="tab ${Nav.trainTab==='arena'?'on':''}" onclick="Screens.trainTab('arena')">Reithalle</div>
+      <div class="tab ${Nav.trainTab==='history'?'on':''}" onclick="Screens.trainTab('history')">Verlauf</div>
+    </div>
+    <div id="ttab-content"></div>
+  `;
+  Screens.renderTrainTab();
+};
+Screens.trainTab = function(tab){ Nav.trainTab = tab; Screens.training(); };
+Screens.renderTrainTab = function(){
+  const box = document.getElementById('ttab-content');
+  if(Nav.trainTab==='rider') box.innerHTML = Screens.riderPanel();
+  else if(Nav.trainTab==='horse') box.innerHTML = Screens.horsePanel();
+  else if(Nav.trainTab==='arena') box.innerHTML = Screens.arenaPanel();
+  else box.innerHTML = Screens.historyPanel();
+  if(Nav.trainTab==='arena') Screens.mountArena();
+};
+Screens.riderPanel = function(){
+  const plans = RIDER_PLANS.map(p=>`<div class="plan-chip" onclick="App.logPlan('${p.id}')"><div class="pc-t">${p.title}</div><div class="pc-d">${p.desc}</div></div>`).join('');
+  const cats = ['Alle','Rumpf','Bein & Sitz','Balance','Beweglichkeit'];
+  const activeCat = Nav.riderCat || 'Alle';
+  const tags = cats.map(c=>`<div class="tag ${activeCat===c?'on':''}" onclick="Screens.setRiderCat('${c}')">${c}</div>`).join('');
+  const list = RIDER_EXERCISES.filter(e=> activeCat==='Alle' || e.cat===activeCat).map(e=>`
+    <div class="exercise-card">
+      <div class="ex-img">${e.img}</div>
+      <div class="ex-body">
+        <div class="ex-title">${e.title} <span class="ex-meta">${e.meta}</span></div>
+        <div class="ex-tag-mini">${e.label}</div>
+        <div class="ex-why"><b>Warum:</b> ${e.why}</div>
+        <button class="log-btn" onclick="App.logExercise('${e.id}')">Als erledigt eintragen</button>
+      </div>
+    </div>`).join('');
+  return `
+    <div class="section-label">Fertige Trainingspläne</div>
+    <div class="plan-scroll">${plans}</div>
+    <div class="section-label">Nach Zielbereich</div>
+    <div class="tag-row" style="margin-bottom:16px;">${tags}</div>
+    ${list}
+  `;
+};
+Screens.setRiderCat = function(c){ Nav.riderCat=c; document.getElementById('ttab-content').innerHTML = Screens.riderPanel(); };
+
+Screens.horsePanel = function(){
+  const types = Object.keys(HORSE_SUGGESTIONS);
+  const tags = types.map(t=>`<div class="tag ${Nav.horseTab===t?'on':''}" onclick="Screens.setHorseTab('${t}')">${t}</div>`).join('');
+  const sel = Nav.horseSelected[Nav.horseTab] || (Nav.horseSelected[Nav.horseTab]=new Set());
+  const items = HORSE_SUGGESTIONS[Nav.horseTab].map(s=>`
+    <div class="suggest-item ${sel.has(s.id)?'on':''}" onclick="Screens.toggleHorseSug('${s.id}')">
+      <div class="sug-check">${sel.has(s.id)?'✓':''}</div>
+      <div class="sug-info"><div class="st">${s.title}</div><div class="sd">${s.desc}</div></div>
+    </div>`).join('');
+  const chosen = HORSE_SUGGESTIONS[Nav.horseTab].filter(s=>sel.has(s.id));
+  const horseSelect = S.horses.length ? `<select id="horse-picker" style="border:1px solid var(--line); border-radius:8px; padding:4px 8px; font-size:11px; margin-bottom:10px;">
+      ${S.horses.map(h=>`<option value="${h.id}">${esc(h.name)}</option>`).join('')}</select>` : `<div class="empty-hint">Noch kein Pferd angelegt – füg zuerst eins auf dem Homescreen hinzu.</div>`;
+  return `
+    <div class="section-label">Trainingsart</div>
+    <div class="tag-row" style="margin-bottom:16px;">${tags}</div>
+    <div class="section-label">Übungsvorschläge · zum Auswählen</div>
+    ${items}
+    <div class="plan-preview">
+      <div class="pp-title">Deine Einheit heute</div>
+      <div class="pp-list">${chosen.length? chosen.map((c,i)=>`${i+1}. ${c.title}`).join(' · ') : 'Noch keine Übung gewählt'}</div>
+      ${horseSelect}
+      <button class="mini-btn gold" style="width:100%;" ${!S.horses.length||!chosen.length?'disabled style="opacity:.5"':''} onclick="App.saveHorseSession()">Einheit speichern</button>
+    </div>
+  `;
+};
+Screens.setHorseTab = function(t){ Nav.horseTab=t; document.getElementById('ttab-content').innerHTML = Screens.horsePanel(); };
+Screens.toggleHorseSug = function(id){
+  const sel = Nav.horseSelected[Nav.horseTab] || (Nav.horseSelected[Nav.horseTab]=new Set());
+  if(sel.has(id)) sel.delete(id); else sel.add(id);
+  document.getElementById('ttab-content').innerHTML = Screens.horsePanel();
+};
+
+Screens.arenaPanel = function(){
+  return `
+    <div class="tag-row" style="margin-bottom:14px;">
+      <div class="tag ${Nav.arenaMode==='Springen'?'on':''}" onclick="Screens.setArenaMode('Springen')">Springparcours</div>
+      <div class="tag ${Nav.arenaMode==='Dressur'?'on':''}" onclick="Screens.setArenaMode('Dressur')">Dressurstrecke</div>
+    </div>
+    <div class="arena-card">
+      <div class="tt">Reithallen-Planer</div>
+      <div class="arena-hint">Auf das Feld tippen, um ${Nav.arenaMode==='Springen'?'ein Hindernis':'einen Punkt'} zu setzen.</div>
+      <div class="arena-grid" id="arena-grid" onclick="Screens.arenaClick(event)"></div>
+      <div class="arena-actions">
+        <button class="mini-btn" onclick="Screens.arenaClear()">Zurücksetzen</button>
+        <button class="mini-btn gold" onclick="Screens.arenaAnnounce()">▶ Ansage starten</button>
+      </div>
+    </div>
+    <div class="section-label">Gespeicherte Parcours</div>
+    <div id="arena-saved"></div>
+    <button class="add-contact" onclick="Screens.arenaSave()">+ Aktuellen Plan speichern</button>
+  `;
+};
+Screens.setArenaMode = function(m){ Nav.arenaMode=m; Nav.arenaObstacles=[]; Nav.arenaCounter=0; document.getElementById('ttab-content').innerHTML = Screens.arenaPanel(); Screens.mountArena(); };
+Screens.mountArena = function(){
+  const grid = document.getElementById('arena-grid');
+  if(!grid) return;
+  grid.innerHTML = Nav.arenaObstacles.map(o=>`<div class="obstacle" style="top:${o.y}%; left:${o.x}%;">${o.label}</div>`).join('');
+  Screens.renderSavedArenas();
+};
+Screens.arenaClick = function(ev){
+  const rect = ev.currentTarget.getBoundingClientRect();
+  const x = ((ev.clientX-rect.left)/rect.width*100).toFixed(1);
+  const y = ((ev.clientY-rect.top)/rect.height*100).toFixed(1);
+  Nav.arenaCounter++;
+  let label = Nav.arenaCounter;
+  if(Nav.arenaMode==='Dressur'){ const letters=['A','K','V','E','S','H','C','M','R','B','F','P']; label = letters[(Nav.arenaCounter-1)%letters.length]; }
+  Nav.arenaObstacles.push({x,y,label});
+  Screens.mountArena();
+};
+Screens.arenaClear = function(){ Nav.arenaObstacles=[]; Nav.arenaCounter=0; Screens.mountArena(); };
+Screens.arenaAnnounce = function(){
+  if(!Nav.arenaObstacles.length){ Modal.toast('Bitte zuerst Punkte auf dem Feld setzen.'); return; }
+  const words = Nav.arenaMode==='Springen'
+    ? Nav.arenaObstacles.map(o=>`Hindernis ${o.label}`).join(', ')
+    : Nav.arenaObstacles.map(o=>o.label).join(', ');
+  const text = `${Nav.arenaMode==='Springen'?'Dein Parcours':'Deine Strecke'}: ${words}. Viel Erfolg!`;
+  try{
+    const u = new SpeechSynthesisUtterance(text); u.lang='de-DE';
+    window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+  }catch(e){ Modal.toast(text); }
+};
+Screens.arenaSave = function(){
+  if(!Nav.arenaObstacles.length){ Modal.toast('Bitte zuerst Punkte setzen.'); return; }
+  S.arenas = S.arenas || [];
+  S.arenas.push({id:uid(), mode:Nav.arenaMode, count:Nav.arenaObstacles.length, date:todayISO()});
+  saveState(); Modal.toast('Plan gespeichert!'); Screens.renderSavedArenas();
+};
+Screens.renderSavedArenas = function(){
+  const box = document.getElementById('arena-saved');
+  if(!box) return;
+  const list = S.arenas || [];
+  box.innerHTML = list.length ? list.slice().reverse().map(a=>`
+    <div class="termin-row"><div class="termin-date"><div class="dd2">🏇</div></div>
+    <div class="termin-info"><div class="tn">${a.mode==='Springen'?'Springparcours':'Dressurstrecke'}</div><div class="tr">${a.count} Punkte · ${fmtDate(a.date)}</div></div></div>
+  `).join('') : `<div class="empty-hint">Noch keine Pläne gespeichert.</div>`;
+};
+
+Screens.historyPanel = function(){
+  const filter = Nav.histFilter || 'Alle';
+  const tags = ['Alle','Reiter','Pferd'].map(f=>`<div class="tag ${filter===f?'on':''}" onclick="Screens.setHistFilter('${f}')">${f}</div>`).join('');
+  const list = S.trainings.filter(t=> filter==='Alle' || (filter==='Reiter'?t.kind==='reiter':t.kind==='pferd'))
+    .slice().sort((a,b)=>b.date.localeCompare(a.date));
+  const rows = list.map(t=>`
+    <div class="hist-row">
+      <div class="hist-ic ${t.kind==='reiter'?'rider':'horse'}">${t.kind==='reiter'?'💪':'🏇'}</div>
+      <div class="hist-info"><div class="ht">${esc(t.title)}</div><div class="hd">${fmtDate(t.date)}${t.minutes?' · '+t.minutes+' Min':''}</div></div>
+      <div class="hist-del" onclick="App.deleteTraining('${t.id}')">✕</div>
+    </div>`).join('');
+  return `<div class="tag-row" style="margin-bottom:16px;">${tags}</div>${rows || '<div class="empty-hint">Noch keine Trainingseinheiten eingetragen.</div>'}`;
+};
+Screens.setHistFilter = function(f){ Nav.histFilter=f; document.getElementById('ttab-content').innerHTML = Screens.historyPanel(); };
+
+/* ---- CARE / CALENDAR ---- */
+Screens.care = function(){
+  const now = Nav.calMonth || new Date();
+  Nav.calMonth = now;
+  const year = now.getFullYear(), month = now.getMonth();
+  const first = new Date(year, month, 1);
+  const startOffset = (first.getDay()+6)%7; // Mo=0
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const prevDays = new Date(year, month, 0).getDate();
+  const cells = [];
+  for(let i=startOffset;i>0;i--) cells.push({d:prevDays-i+1, muted:true});
+  for(let d=1; d<=daysInMonth; d++){
+    const iso = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const has = S.appointments.some(a=>a.date===iso);
+    cells.push({d, iso, has, today: iso===todayISO()});
+  }
+  while(cells.length%7!==0) cells.push({d:cells.length, muted:true});
+  const monthName = now.toLocaleDateString('de-DE',{month:'long', year:'numeric'});
+  const dayCells = cells.map(c=>`<div class="cal-day ${c.muted?'muted':''} ${c.today?'today':''}">${c.d}${c.has?'<div class="mark"></div>':''}</div>`).join('');
+
+  const upcoming = S.appointments.filter(a=>a.date>=todayISO()).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  const apptRows = upcoming.map(a=>`
+    <div class="termin-row">
+      <div class="termin-date"><div class="dd2">${a.date.slice(8,10)}</div><div class="mm">${new Date(a.date+'T00:00:00').toLocaleDateString('de-DE',{month:'short'})}</div></div>
+      <div class="termin-info"><div class="tn">${esc(a.title)} · ${esc(horseName(a.horseId))}</div><div class="tr">${esc(a.notes||'')}</div></div>
+      <div class="hist-del" onclick="App.deleteAppointment('${a.id}')">✕</div>
+    </div>`).join('') || `<div class="empty-hint">Keine anstehenden Termine.</div>`;
+
+  const feedRows = S.horses.map(h=>`
+    <div class="termin-row">
+      <div class="termin-date"><div class="dd2">🌾</div></div>
+      <div class="termin-info">
+        <div class="tn">${esc(h.name)}</div>
+        <textarea style="width:100%; border:none; background:none; font-size:11.5px; color:var(--ink-soft); resize:none;" rows="2"
+          placeholder="Fütterungsplan / Besonderheiten..." onchange="App.saveFeeding('${h.id}', this.value)">${esc(S.feeding[h.id]||'')}</textarea>
+      </div>
+    </div>`).join('') || `<div class="empty-hint">Noch kein Pferd angelegt.</div>`;
+
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Versorgung</div></div>
+    <div class="cal-card">
+      <div class="cal-head"><div class="cm">${monthName}</div>
+        <div class="cal-nav"><div onclick="Screens.calShift(-1)">‹</div><div onclick="Screens.calShift(1)">›</div></div></div>
+      <div class="cal-weekdays"><div>Mo</div><div>Di</div><div>Mi</div><div>Do</div><div>Fr</div><div>Sa</div><div>So</div></div>
+      <div class="cal-days">${dayCells}</div>
+      <button class="add-termin" onclick="Screens.newAppointment()">+ Termin eintragen</button>
+    </div>
+    <div class="section-label">Anstehende Termine</div>
+    ${apptRows}
+    <div class="section-label">Fütterungsplan</div>
+    ${feedRows}
+  `;
+};
+Screens.calShift = function(dir){ const m = Nav.calMonth||new Date(); Nav.calMonth = new Date(m.getFullYear(), m.getMonth()+dir, 1); Screens.care(); };
+Screens.newAppointment = function(){
+  if(!S.horses.length){ Modal.toast('Bitte zuerst ein Pferd anlegen (Homescreen → "+").'); return; }
+  const horseOptions = S.horses.map(h=>({value:h.id, label:h.name}));
+  Modal.form('Termin eintragen', [
+    {id:'title', label:'Was steht an?', placeholder:'z. B. Hufschmied, Tierarzt'},
+    {id:'date', label:'Datum', type:'date', value:todayISO()},
+    {id:'horseId', label:'Für welches Pferd?', type:'select', options:horseOptions, value:S.horses[0].id},
+    {id:'notes', label:'Notiz (optional)', placeholder:''},
+  ], function(v){
+    if(!v.title || !v.date){ Modal.toast('Bitte Titel und Datum angeben.'); return; }
+    S.appointments.push({id:uid(), title:v.title, date:v.date, horseId:v.horseId, notes:v.notes});
+    saveState(); Modal.close(); Screens.care();
+  });
+};
+
+/* ---- COSTS ---- */
+Screens.costs = function(){
+  const tab = Nav.costsTab || 'aktuell';
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Kosten</div></div>
+    <div class="tab-row">
+      <div class="tab ${tab==='aktuell'?'on':''}" onclick="Screens.setCostsTab('aktuell')">Aktuell</div>
+      <div class="tab ${tab==='archiv'?'on':''}" onclick="Screens.setCostsTab('archiv')">📁 Archiv</div>
+    </div>
+    <div id="costs-content"></div>
+  `;
+  Screens.renderCostsTab();
+};
+Screens.setCostsTab = function(t){ Nav.costsTab=t; Screens.costs(); };
+Screens.renderCostsTab = function(){
+  const box = document.getElementById('costs-content');
+  box.innerHTML = (Nav.costsTab||'aktuell')==='aktuell' ? Screens.costsCurrentPanel() : Screens.costsArchivePanel();
+};
+Screens.costsCurrentPanel = function(){
+  const rows = COST_GUIDE.map(g=>{
+    const on = !!S.costChecks[g.key];
+    const entries = S.costs.filter(c=>c.key===g.key);
+    const draftFreq = Nav['freq_'+g.key] || g.defFreq;
+    return `
+    <div class="check-item ${on?'on':''}">
+      <div class="check-item-top" onclick="Screens.toggleCostCheck('${g.key}')">
+        <div class="check-box">${on?'✓':''}</div><div class="ct">${g.label}</div><div>${g.icon}</div>
+      </div>
+      ${on ? `
+      <div class="entry-row">
+        <input type="number" step="0.01" placeholder="Betrag in €" id="amt-${g.key}">
+        <div class="freq-toggle">
+          <div class="freq-chip ${draftFreq==='monatlich'?'on':''}" onclick="Screens.setFreq('${g.key}','monatlich')">monatlich</div>
+          <div class="freq-chip ${draftFreq==='einmalig'?'on':''}" onclick="Screens.setFreq('${g.key}','einmalig')">einmalig</div>
+        </div>
+        <button class="btn btn-gold" style="padding:8px 12px; font-size:11px;" onclick="App.addCost('${g.key}','${g.label.replace(/'/g,"\\'")}')">Speichern</button>
+      </div>` : ''}
+      ${entries.length ? entries.map(e=>`<div class="cost-row" style="margin-top:8px;"><div class="cr-name">${fmtDate(e.date)} · ${e.freq}</div><div class="cr-val">${euro(Number(e.amount))}</div></div>`).join('') : ''}
+    </div>`;
+  }).join('');
+
+  const sonstige = S.costs.filter(c=>c.key==='sonstige').slice().sort((a,b)=>b.date.localeCompare(a.date));
+  const sonstigeRows = sonstige.map(e=>`
+    <div class="cost-row">
+      <div class="cr-name">${esc(e.label)} · ${fmtDate(e.date)} · ${e.freq}</div>
+      <div class="cr-val">${euro(Number(e.amount))}</div>
+      <div class="hist-del" onclick="App.deleteCost('${e.id}')">✕</div>
+    </div>`).join('') || `<div class="empty-hint">Noch keine sonstigen Ausgaben eingetragen.</div>`;
+
+  const total = monthCostTotal();
+  return `
+    <div class="guide-banner"><div class="gt">Leitfaden Grundausgaben</div>
+      <div class="gd">Hak ab, was auf dich zutrifft – trag direkt den Betrag ein, dann bleibt nichts vergessen.</div></div>
+    ${rows}
+    <div class="section-label" style="margin-top:18px;">Sonstige Ausgaben</div>
+    ${sonstigeRows}
+    <button class="add-contact" onclick="Screens.newMiscCost()">+ Sonstige Ausgabe hinzufügen</button>
+    <div class="cost-summary"><div class="cs-label">Dieser Monat · Gesamt</div><div class="cs-val">${euro(total)}</div></div>
+  `;
+};
+Screens.newMiscCost = function(){
+  Modal.form('Sonstige Ausgabe', [
+    {id:'label', label:'Wofür?', placeholder:'z. B. Fellpflege, Deko-Halfter'},
+    {id:'amount', label:'Betrag in €', type:'number', placeholder:'0,00'},
+    {id:'date', label:'Datum', type:'date', value:todayISO()},
+    {id:'freq', label:'Häufigkeit', type:'select', value:'einmalig',
+      options:[{value:'einmalig',label:'einmalig'},{value:'monatlich',label:'monatlich'}]},
+  ], function(v){
+    const amount = parseFloat(v.amount);
+    if(!v.label || !amount || amount<=0){ Modal.toast('Bitte Bezeichnung und gültigen Betrag eingeben.'); return; }
+    S.costs.push({id:uid(), key:'sonstige', label:v.label, amount, freq:v.freq, date:v.date||todayISO()});
+    saveState(); Modal.close(); Screens.renderCostsTab();
+  });
+};
+Screens.costsArchivePanel = function(){
+  if(!S.costs.length) return `<div class="empty-hint">Noch keine Ausgaben eingetragen – dein Archiv füllt sich, sobald du Kosten erfasst.</div>`;
+  const byMonth = {};
+  S.costs.forEach(c=>{ const ym=c.date.slice(0,7); (byMonth[ym]=byMonth[ym]||[]).push(c); });
+  const months = Object.keys(byMonth).sort().reverse();
+  return months.map(ym=>{
+    const entries = byMonth[ym].slice().sort((a,b)=>b.date.localeCompare(a.date));
+    const total = entries.reduce((s,c)=>s+Number(c.amount||0),0);
+    const label = new Date(ym+'-01T00:00:00').toLocaleDateString('de-DE',{month:'long', year:'numeric'});
+    const rows = entries.map(e=>`
+      <div class="cost-row">
+        <div class="cr-name">${esc(e.label)} · ${fmtDate(e.date)}</div>
+        <div class="cr-val">${euro(Number(e.amount))}</div>
+      </div>`).join('');
+    return `
+      <div class="card" style="margin-bottom:14px;">
+        <div class="cost-summary" style="margin:0 0 10px;"><div class="cs-label">${label}</div><div class="cs-val" style="font-size:15px;">${euro(total)}</div></div>
+        ${rows}
+      </div>`;
+  }).join('');
+};
+Screens.toggleCostCheck = function(key){ S.costChecks[key] = !S.costChecks[key]; saveState(); Screens.renderCostsTab(); };
+Screens.setFreq = function(key, freq){ Nav['freq_'+key]=freq; Screens.renderCostsTab(); };
+
+/* ---- CONTACTS ---- */
+Screens.contacts = function(){
+  const groups = CONTACT_GROUPS.map(g=>{
+    const items = S.contacts.filter(c=>c.group===g);
+    if(!items.length) return '';
+    const rows = items.map(c=>`
+      <div class="contact-row">
+        <div class="contact-ic">${CONTACT_ICONS[g]}</div>
+        <div class="contact-info"><div class="cn">${esc(c.name)}</div><div class="cr">${esc(c.role)}</div></div>
+        ${c.phone? `<a class="call-btn" href="tel:${esc(c.phone)}" style="text-decoration:none;">📞</a>`:''}
+        <div class="hist-del" onclick="App.deleteContact('${c.id}')">✕</div>
+      </div>`).join('');
+    return `<div class="contact-group"><div class="group-title">${g}</div>${rows}</div>`;
+  }).join('');
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Kontakte</div></div>
+    ${groups || '<div class="empty-hint">Noch keine Kontakte gespeichert.</div>'}
+    <button class="add-contact" onclick="Screens.newContact()">+ Kontakt hinzufügen</button>
+  `;
+};
+Screens.newContact = function(){
+  Modal.form('Kontakt hinzufügen', [
+    {id:'name', label:'Name', placeholder:'z. B. Dr. Weber'},
+    {id:'role', label:'Rolle', placeholder:'z. B. Tierarzt, Hufschmied, Reitlehrer'},
+    {id:'phone', label:'Telefonnummer (optional)', type:'tel', placeholder:''},
+    {id:'group', label:'Kategorie', type:'select', value:CONTACT_GROUPS[0],
+      options:CONTACT_GROUPS.map(g=>({value:g, label:g}))},
+  ], function(v){
+    if(!v.name){ Modal.toast('Bitte einen Namen eingeben.'); return; }
+    S.contacts.push({id:uid(), name:v.name, role:v.role, phone:v.phone, group:v.group});
+    saveState(); Modal.close(); Screens.contacts();
+  });
+};
+
+/* ---- QUIZ ---- */
+function buildQuizSet(){
+  const pool = KNOWLEDGE_QUESTIONS.slice();
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  const chosen = pool.slice(0,3);
+  const total = monthCostTotal();
+  const options = [Math.round(total*0.4), Math.round(total), Math.round(total*1.7)].map(v=>Math.max(v,5));
+  chosen.push({q:'Wie viel hat dich dein Hobby diesen Monat bisher gekostet?',
+    opts:options.map(o=>`ca. ${o} €`), correct:1, cat:'kosten', dynamic:true});
+  const wk = weekTrainingCounts();
+  const trainOpts = [Math.max(wk.pferd+wk.reiter-2,0), wk.pferd+wk.reiter, wk.pferd+wk.reiter+2];
+  chosen.push({q:'Wie oft hast du diese Woche schon trainiert (Pferd + Reiter zusammen)?',
+    opts:trainOpts.map(o=>`${o}× diese Woche`), correct:1, cat:'training', dynamic:true});
+  return chosen.slice(0,5);
+}
+Screens.quiz = function(){
+  const doneToday = S.quiz.lastDoneDate === todayISO();
+  if(doneToday && !Nav.quizForceReview){
+    return Screens.quizSummary();
+  }
+  if(!Nav.quizSet){ Nav.quizSet = buildQuizSet(); Nav.quizIndex=0; Nav.quizAnswers=[]; }
+  Screens.renderQuizQuestion();
+};
+Screens.renderQuizQuestion = function(){
+  const idx = Nav.quizIndex; const q = Nav.quizSet[idx];
+  const dots = Nav.quizSet.map((_,i)=>`<div class="qp-dot ${i<idx?'done':''}"></div>`).join('');
+  const answered = Nav.quizAnswers[idx];
+  const opts = q.opts.map((o,i)=>{
+    let cls='opt';
+    if(answered!==undefined){ if(i===q.correct) cls+=' correct'; else if(i===answered) cls+=' wrong'; }
+    return `<div class="${cls}" onclick="Screens.answerQuiz(${i})"><div class="dotc"></div> ${o}</div>`;
+  }).join('');
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Tages-Quiz</div></div>
+    <div class="quiz-hero">
+      <div class="day">Frage ${idx+1} von ${Nav.quizSet.length}</div>
+      <div class="qtitle">${idx===0?('Los geht\'s, '+esc(S.profile.name||'Reiter')+'!'):'Weiter so!'}</div>
+      <div class="quiz-progress-row">${dots}</div>
+    </div>
+    <div class="qcard">
+      <div class="qn">${q.cat}</div>
+      <div class="qtext">${q.q}</div>
+      ${opts}
+    </div>
+    ${answered!==undefined ? `<button class="btn btn-primary btn-block" onclick="Screens.nextQuiz()">${idx<Nav.quizSet.length-1?'Nächste Frage':'Auswertung'}</button>` : ''}
+  `;
+};
+Screens.answerQuiz = function(i){
+  if(Nav.quizAnswers[Nav.quizIndex]!==undefined) return;
+  Nav.quizAnswers[Nav.quizIndex] = i;
+  const q = Nav.quizSet[Nav.quizIndex];
+  if(i===q.correct){
+    S.quiz.points += 10;
+    S.quiz.correctByCat[q.cat] = (S.quiz.correctByCat[q.cat]||0)+1;
+  }
+  Screens.renderQuizQuestion();
+};
+Screens.nextQuiz = function(){
+  if(Nav.quizIndex < Nav.quizSet.length-1){ Nav.quizIndex++; Screens.renderQuizQuestion(); }
+  else{
+    S.quiz.lastDoneDate = todayISO();
+    checkBadges();
+    saveState();
+    Nav.quizForceReview=false;
+    Nav.quizSet=null;
+    Screens.home(); // Nudge verschwindet
+    Nav.go('quiz');
+  }
+};
+function checkBadges(){
+  const thresholds = [{cat:'fuetterung', at:3, id:'fuetterung', label:'Fütterungs-Profi', icon:'🥕'},
+    {cat:'kosten', at:3, id:'kosten', label:'Kosten-Checker', icon:'💶'},
+    {cat:'training', at:5, id:'training', label:'Trainingswissen-Profi', icon:'🏆'}];
+  thresholds.forEach(t=>{
+    if((S.quiz.correctByCat[t.cat]||0) >= t.at && !S.quiz.badges.includes(t.id)) S.quiz.badges.push(t.id);
+  });
+}
+Screens.quizSummary = function(){
+  const level = Math.max(1, Math.floor(S.quiz.points/50)+1);
+  const pct = S.quiz.points%50/50*100;
+  const badgeDefs = {fuetterung:{icon:'🥕',label:'Fütterungs-Profi'}, kosten:{icon:'💶',label:'Kosten-Checker'}, training:{icon:'🏆',label:'Trainingswissen-Profi'}};
+  const badges = S.quiz.badges.map(b=>`<div class="badge-pill"><div class="bi">${badgeDefs[b].icon}</div><div class="bt">${badgeDefs[b].label}</div></div>`).join('')
+    || `<div class="empty-hint">Noch keine Auszeichnungen – beantworte weiter fleißig!</div>`;
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Tages-Quiz</div></div>
+    <div class="quiz-hero"><div class="day">Heute erledigt ✓</div><div class="qtitle">Bis morgen, ${esc(S.profile.name||'Reiter')}!</div>
+      <div class="quiz-progress-row">${dotsFilled(5)}</div></div>
+    <div class="qlevel-card"><div><div class="ql-t">Reitwissen</div><div class="ql-v">Level ${level}</div></div><div class="ql-n">${Math.round(pct)}%</div></div>
+    <div class="section-label">Deine Auszeichnungen</div>
+    <div class="badges-row">${badges}</div>
+    <button class="btn btn-ghost btn-block" style="margin-top:18px;" onclick="Screens.replayQuiz()">Fragen nochmal ansehen</button>
+  `;
+};
+function dotsFilled(n){ let h=''; for(let i=0;i<n;i++) h+='<div class="qp-dot done"></div>'; return h; }
+Screens.replayQuiz = function(){ Nav.quizForceReview=true; if(!Nav.quizSet) Nav.quizSet=buildQuizSet(); Nav.quizIndex=0; Screens.renderQuizQuestion(); };
+
+/* ---- LEGAL ---- */
+Screens.legal = function(){
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Impressum & Kontakt</div></div>
+    <div class="legal-block"><div class="lt">Angaben gemäß § 5 TMG</div>
+      <p>Daniel Steinkuhl</p><p>Charlottenstraße 8</p><p>47447 Moers</p>
+      <p>E-Mail: danielsbodymanufaktur@gmail.com</p><p>Web: www.danielsbodymanufaktur.de</p></div>
+    <div class="legal-block"><div class="lt">Kontakt zum Entwickler</div>
+      <div class="dev-card"><div class="dev-avatar">DS</div><div class="dev-info"><div class="dn">Daniel Steinkuhl</div><div class="de">danielsbodymanufaktur@gmail.com</div></div></div></div>
+    <div class="legal-block"><div class="lt">Datenschutz</div>
+      <p>Alle Angaben in dieser App werden ausschließlich lokal in deinem Konto gespeichert und nicht an Dritte weitergegeben.</p></div>
+  `;
+};
+
+const NUTRITION_TIPS = {
+  Pferd:[
+    {cat:'Grundfutter', icon:'🌾', title:'Raufutter als Basis', text:'Heu sollte den Großteil der Fütterung ausmachen – Pferde sind Dauerfresser und brauchen möglichst durchgehend Zugang zu Raufutter für eine gesunde Verdauung.'},
+    {cat:'Wasser', icon:'💧', title:'Ausreichend Wasser', text:'Ein Pferd benötigt je nach Größe, Wetter und Arbeit ca. 30–50 Liter frisches Wasser täglich. Tränken regelmäßig auf Sauberkeit prüfen.'},
+    {cat:'Kraftfutter', icon:'🌽', title:'Nur bei Bedarf', text:'Kraftfutter nur zufüttern, wenn über Raufutter allein nicht genug Energie gedeckt wird – z. B. bei intensiver Arbeit. Menge an Belastung anpassen.'},
+    {cat:'Fütterungsrhythmus', icon:'⏰', title:'Kleine Portionen, oft', text:'Mehrere kleine Portionen über den Tag verteilt sind für den Pferdemagen deutlich besser als ein bis zwei große Mahlzeiten.'},
+    {cat:'Vor dem Training', icon:'🏇', title:'Nicht direkt nach dem Fressen reiten', text:'Nach einer größeren Kraftfuttergabe sollte dem Pferd vor dem Training etwas Ruhe zur Verdauung gegeben werden.'},
+    {cat:'Besonderheiten', icon:'📋', title:'Individuelle Bedürfnisse beachten', text:'Allergien, Unverträglichkeiten oder gesundheitliche Einschränkungen deines Pferds im Fütterungsplan (Bereich Versorgung) festhalten.'},
+  ],
+  Reiter:[
+    {cat:'Vor dem Training', icon:'⚡', title:'Leicht verdauliche Energie', text:'Vor dem Reiten lieber eine kleine, leicht verdauliche Mahlzeit oder einen Snack statt einer großen Portion kurz vorher.'},
+    {cat:'Flüssigkeit', icon:'💧', title:'Genug trinken', text:'Gerade bei körperlich fordernden Einheiten (auch beim Reiten selbst) ausreichend Wasser vor, während und nach dem Training zu sich nehmen.'},
+    {cat:'Nach dem Training', icon:'🔋', title:'Regeneration unterstützen', text:'Nach dem Reiten helfen Wasser und etwas Eiweiß dabei, dass sich die beanspruchte Muskulatur erholen kann.'},
+    {cat:'Alltag', icon:'🥗', title:'Ausgewogen essen', text:'Eine ausgewogene Ernährung mit ausreichend Gemüse, Vollkorn und Eiweiß unterstützt Kraft und Ausdauer für den Reitsport langfristig.'},
+    {cat:'Energie-Tief vermeiden', icon:'🍌', title:'Kleine Snacks bereithalten', text:'Bei längeren Stallnachmittagen einen kleinen Snack (z. B. Obst, Nüsse) griffbereit haben, um Konzentration und Energie zu halten.'},
+  ],
+};
+Screens.nutritionInfo = function(){
+  const tab = Nav.nutriTab || 'Pferd';
+  const tips = NUTRITION_TIPS[tab].map(t=>`
+    <div class="exercise-card">
+      <div class="ex-body" style="padding-top:14px;">
+        <div class="ex-title">${t.icon} ${t.title}</div>
+        <div class="ex-tag-mini">${t.cat}</div>
+        <div class="ex-why" style="margin-top:8px;"><span>${t.text}</span></div>
+      </div>
+    </div>`).join('');
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Ernährung</div></div>
+    <div class="tab-row">
+      <div class="tab ${tab==='Pferd'?'on':''}" onclick="Screens.setNutriTab('Pferd')">🐴 Pferd</div>
+      <div class="tab ${tab==='Reiter'?'on':''}" onclick="Screens.setNutriTab('Reiter')">🧑 Reiter</div>
+    </div>
+    ${tips}
+  `;
+};
+Screens.setNutriTab = function(t){ Nav.nutriTab = t; Screens.nutritionInfo(); };
+
+/* ============================= ACTIONS ============================= */
+const App = {};
+App.handlePhoto = function(ev, target){
+  const file = ev.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(){ S.profile.photo = reader.result; saveState(); Screens.profile(); };
+  reader.readAsDataURL(file);
+};
+App.handleHorsePhoto = function(ev, id, isNew){
+  const file = ev.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(){
+    if(isNew){ Nav.pendingHorsePhoto = reader.result; }
+    else{ const h=S.horses.find(x=>x.id===id); if(h){ h.photo=reader.result; saveState(); } }
+    Screens.horse(isNew?'new':id);
+  };
+  reader.readAsDataURL(file);
+};
+App.saveProfile = function(){
+  S.profile.name = document.getElementById('pf-name').value.trim() || S.profile.name;
+  S.profile.level = document.getElementById('pf-level').value;
+  saveState(); Nav.go('home');
+};
+App.saveHorse = function(id, isNew){
+  const name = document.getElementById('hs-name').value.trim();
+  if(!name){ Modal.toast('Bitte einen Namen eingeben.'); return; }
+  const data = {
+    name, type:document.getElementById('hs-type').value.trim(),
+    age:document.getElementById('hs-age').value.trim(),
+    notes:document.getElementById('hs-notes').value.trim(),
+  };
+  if(isNew){
+    S.horses.push({id, ...data, photo:Nav.pendingHorsePhoto||null});
+    Nav.pendingHorsePhoto=null;
+  } else {
+    const h = S.horses.find(x=>x.id===id); Object.assign(h, data);
+  }
+  saveState(); Nav.go('home');
+};
+App.deleteHorse = function(id){
+  Modal.confirm('Dieses Pferd wirklich entfernen?', function(){
+    S.horses = S.horses.filter(h=>h.id!==id); saveState(); Nav.go('home');
+  });
+};
+App.logExercise = function(exId){
+  const ex = RIDER_EXERCISES.find(e=>e.id===exId);
+  S.trainings.push({id:uid(), kind:'reiter', title:ex.title, minutes:5, date:todayISO(), category:ex.cat});
+  saveState(); Modal.toast('Übung eingetragen: '+ex.title);
+  Screens.renderTrainTab();
+};
+App.logPlan = function(planId){
+  const plan = RIDER_PLANS.find(p=>p.id===planId);
+  S.trainings.push({id:uid(), kind:'reiter', title:'Reitertraining · '+plan.title, minutes:15, date:todayISO(), category:'Plan'});
+  saveState(); Modal.toast('Plan eingetragen: '+plan.title);
+  Screens.renderTrainTab();
+};
+App.saveHorseSession = function(){
+  const picker = document.getElementById('horse-picker');
+  if(!picker) return;
+  const horseId = picker.value;
+  const sel = Nav.horseSelected[Nav.horseTab];
+  const chosen = HORSE_SUGGESTIONS[Nav.horseTab].filter(s=>sel && sel.has(s.id));
+  if(!chosen.length) return;
+  const title = `${Nav.horseTab} · ${horseName(horseId)}`;
+  S.trainings.push({id:uid(), kind:'pferd', title, minutes:chosen.length*10, date:todayISO(), category:Nav.horseTab});
+  Nav.horseSelected[Nav.horseTab] = new Set();
+  saveState(); Modal.toast('Trainingseinheit gespeichert!');
+  Screens.renderTrainTab();
+};
+App.deleteTraining = function(id){ S.trainings = S.trainings.filter(t=>t.id!==id); saveState(); Screens.renderTrainTab(); };
+App.deleteAppointment = function(id){ S.appointments = S.appointments.filter(a=>a.id!==id); saveState(); Screens.care(); };
+App.saveFeeding = function(horseId, val){ S.feeding[horseId]=val; saveState(); };
+App.addCost = function(key, label){
+  const input = document.getElementById('amt-'+key);
+  const amount = parseFloat(input.value);
+  if(!amount || amount<=0){ Modal.toast('Bitte einen gültigen Betrag eingeben.'); return; }
+  const freq = Nav['freq_'+key] || 'monatlich';
+  S.costs.push({id:uid(), key, label, amount, freq, date:todayISO()});
+  saveState(); Screens.renderCostsTab();
+};
+App.deleteCost = function(id){ S.costs = S.costs.filter(c=>c.id!==id); saveState(); Screens.renderCostsTab(); };
+App.deleteContact = function(id){ S.contacts = S.contacts.filter(c=>c.id!==id); saveState(); Screens.contacts(); };
+App.resetAll = async function(){
+  Modal.confirm('Wirklich alle App-Daten zurücksetzen? Das kann nicht rückgängig gemacht werden.', async function(){
+    S = structuredClone(DEFAULT_STATE);
+    await saveState();
+    location.reload();
+  });
+};
+
+/* ============================= ONBOARDING ============================= */
+const Onb = { step:0, name:'', horseName:'' };
+Onb.render = function(){
+  const el = document.getElementById('onboarding');
+  el.classList.remove('hidden');
+  document.getElementById('navbar').classList.add('hidden');
+  const steps = [Onb.stepWelcome, Onb.stepName, Onb.stepHorse, Onb.stepTour];
+  el.innerHTML = steps[Onb.step]();
+};
+Onb.progress = function(total){
+  let h='<div class="onb-progress">';
+  for(let i=0;i<total;i++) h+=`<div class="${i<=Onb.step?'on':''}"></div>`;
+  return h+'</div>';
+};
+Onb.stepWelcome = function(){
+  return `
+    <div class="onb-helper">🧑‍🌾</div>
+    ${Onb.progress(4)}
+    <div class="onb-title">Hallo, ich bin Theo!</div>
+    <div class="onb-sub">Dein Stallhelfer für die App</div>
+    <div class="onb-bubble">Schön, dass du da bist! Ich zeig dir kurz, wie <b>Stallbuch</b> dir hilft, Training,
+      Versorgung und Kosten rund um deinen Pferdesport im Griff zu behalten – ganz ohne Zettelchaos. Lass uns
+      dein Profil einrichten, das dauert nur eine Minute.</div>
+    <div class="onb-spacer"></div>
+    <button class="btn btn-gold btn-block" onclick="Onb.next()">Los geht's</button>
+  `;
+};
+Onb.stepName = function(){
+  return `
+    <div class="onb-helper">🧑‍🌾</div>
+    ${Onb.progress(4)}
+    <div class="onb-title">Wie heißt du?</div>
+    <div class="onb-bubble">Damit ich dich richtig begrüßen kann.</div>
+    <div class="onb-field"><input id="onb-name" placeholder="Dein Name" value="${esc(Onb.name)}"></div>
+    <div class="onb-spacer"></div>
+    <div class="onb-actions">
+      <button class="btn btn-ghost" onclick="Onb.back()">Zurück</button>
+      <button class="btn btn-gold btn-block" onclick="Onb.saveName()">Weiter</button>
+    </div>
+  `;
+};
+Onb.stepHorse = function(){
+  return `
+    <div class="onb-helper">🧑‍🌾</div>
+    ${Onb.progress(4)}
+    <div class="onb-title">Hast du ein Pferd?</div>
+    <div class="onb-bubble">Leg gleich dein erstes Pferd an – Fotos und Details kannst du jederzeit später ergänzen.</div>
+    <div class="onb-field"><input id="onb-horse" placeholder="Name deines Pferds" value="${esc(Onb.horseName)}"></div>
+    <div class="onb-spacer"></div>
+    <div class="onb-actions">
+      <button class="btn btn-ghost" onclick="Onb.back()">Zurück</button>
+      <button class="btn btn-gold btn-block" onclick="Onb.saveHorse()">Weiter</button>
+    </div>
+    <div class="onb-skip" onclick="Onb.next()">Später hinzufügen</div>
+  `;
+};
+Onb.stepTour = function(){
+  return `
+    <div class="onb-helper">🧑‍🌾</div>
+    ${Onb.progress(4)}
+    <div class="onb-title">Das erwartet dich</div>
+    <ul class="onb-list">
+      <li><span class="oi">🏇</span> <div><b>Training</b> – für dich und dein Pferd, inkl. Reithallen-Planer</div></li>
+      <li><span class="oi">🩺</span> <div><b>Versorgung</b> – Termine & Fütterung im Kalender</div></li>
+      <li><span class="oi">💶</span> <div><b>Kosten</b> – mit Leitfaden für alle Grundausgaben</div></li>
+      <li><span class="oi">📇</span> <div><b>Kontakte</b> – Stall, Ärzte & Co. griffbereit</div></li>
+      <li><span class="oi">🎯</span> <div><b>Tages-Quiz</b> – 5 Fragen täglich, macht schlauer</div></li>
+    </ul>
+    <div class="onb-bubble">Am wichtigsten: <b>Dein Reitertraining</b> nicht vergessen – mindestens 2× die Woche,
+      dafür erinnere ich dich immer wieder auf der Startseite!</div>
+    <div class="onb-spacer"></div>
+    <button class="btn btn-gold btn-block" onclick="Onb.finish()">Los geht's mit Stallbuch!</button>
+  `;
+};
+Onb.next = function(){ Onb.step++; Onb.render(); };
+Onb.back = function(){ Onb.step--; Onb.render(); };
+Onb.saveName = function(){
+  const v = document.getElementById('onb-name').value.trim();
+  Onb.name = v; S.profile.name = v || 'Reiter'; Onb.next();
+};
+Onb.saveHorse = function(){
+  const v = document.getElementById('onb-horse').value.trim();
+  Onb.horseName = v;
+  if(v) S.horses.push({id:uid(), name:v, type:'', age:'', notes:'', photo:null});
+  Onb.next();
+};
+Onb.finish = function(){
+  S.onboarded = true; saveState();
+  document.getElementById('onboarding').classList.add('hidden');
+  Nav.go('home');
+};
+
+/* ============================= INIT ============================= */
+(async function init(){
+  await loadState();
+  if(!S.onboarded){ Onb.render(); }
+  else{ Nav.go('home'); }
+})();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(e=>console.log('Service Worker nicht registriert:', e));
+  });
+}
+</script>
+</body>
+</html>
