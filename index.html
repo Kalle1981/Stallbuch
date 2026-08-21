@@ -22,16 +22,13 @@
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
-body{background:linear-gradient(180deg,#1C241D,#0F140F); font-family:var(--font-body); color:var(--ink);
-  display:flex; flex-direction:column; align-items:center; padding:24px 14px 50px; min-height:100vh;}
+body{background:var(--bg-parchment); font-family:var(--font-body); color:var(--ink);
+  display:flex; flex-direction:column; align-items:center; min-height:100vh; min-height:100dvh;}
 button{font-family:var(--font-body); cursor:pointer;}
 input,textarea,select{font-family:var(--font-body);}
-.phone{width:390px; max-width:94vw; height:820px; max-height:90vh; background:var(--bg-parchment);
-  border-radius:44px; border:10px solid #14170F; box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+.phone{width:100%; max-width:100%; height:100vh; height:100dvh; background:var(--bg-parchment);
   overflow:hidden; position:relative; display:flex; flex-direction:column;}
-.notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:22px;
-  background:#14170F; border-radius:0 0 16px 16px; z-index:30;}
-#screen{flex:1; overflow-y:auto; padding:36px 18px 92px;}
+#screen{flex:1; overflow-y:auto; padding:calc(20px + env(safe-area-inset-top)) 18px calc(92px + env(safe-area-inset-bottom));}
 .hidden{display:none !important;}
 
 /* ---- shared ---- */
@@ -284,7 +281,7 @@ input,textarea,select{font-family:var(--font-body);}
 
 /* ---- onboarding ---- */
 .onb-wrap{position:absolute; inset:0; background:var(--bg-parchment); z-index:40; display:flex; flex-direction:column;
-  padding:36px 22px 30px; color:var(--ink); overflow-y:auto;}
+  padding:calc(36px + env(safe-area-inset-top)) 22px calc(30px + env(safe-area-inset-bottom)); color:var(--ink); overflow-y:auto;}
 .onb-helper{width:64px; height:64px; border-radius:50%; background:var(--forest-deep); display:flex; align-items:center;
   justify-content:center; font-size:28px; margin-bottom:16px; box-shadow:0 6px 16px rgba(0,0,0,.12); border:3px solid var(--cream-card);}
 .onb-bubble{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:18px; font-size:13.5px; line-height:1.55; color:var(--ink);}
@@ -305,13 +302,12 @@ input,textarea,select{font-family:var(--font-body);}
   margin-bottom:14px; background:#fff; color:var(--ink);}
 .onb-skip{text-align:center; font-size:11.5px; color:var(--ink-soft); margin-top:10px; text-decoration:underline; cursor:pointer;}
 
-.navbar{position:absolute; bottom:0; left:0; right:0; height:64px; background:var(--cream-card); border-top:1px solid var(--line);
-  display:flex; align-items:center; justify-content:space-around; padding-bottom:6px; z-index:10;}
+.navbar{position:absolute; bottom:0; left:0; right:0; height:calc(64px + env(safe-area-inset-bottom)); background:var(--cream-card); border-top:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-around; padding-bottom:calc(6px + env(safe-area-inset-bottom)); z-index:10;}
 .nav-item{display:flex; flex-direction:column; align-items:center; gap:2px; font-size:9px; color:var(--ink-soft);}
 .nav-item.on{color:var(--forest-deep); font-weight:700;}
 .nav-item .ni{font-size:17px;}
 .lab{color:#D8CFB6; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:14px; opacity:.7;}
-.reset-link{color:#D8CFB6; font-family:var(--font-mono); font-size:10px; margin-top:16px; opacity:.5; text-decoration:underline; cursor:pointer;}
 
 /* ---- modal ---- */
 .modal-overlay{position:absolute; inset:0; background:rgba(20,23,15,.55); z-index:50; display:flex; align-items:flex-end; justify-content:center;}
@@ -326,10 +322,7 @@ input,textarea,select{font-family:var(--font-body);}
 </style>
 </head>
 <body>
-<div class="lab">Stallbuch</div>
-
 <div class="phone">
-  <div class="notch"></div>
   <div id="onboarding" class="onb-wrap hidden"></div>
   <div id="modal-root"></div>
   <div id="screen"></div>
@@ -341,7 +334,6 @@ input,textarea,select{font-family:var(--font-body);}
     <div class="nav-item" data-nav="quiz" onclick="Nav.go('quiz')"><div class="ni">🎯</div>Quiz</div>
   </div>
 </div>
-<div class="reset-link" onclick="App.resetAll()">App zurücksetzen (Demo)</div>
 
 <script>
 /* ============================= DATA / STORAGE ============================= */
@@ -1128,6 +1120,8 @@ Screens.legal = function(){
       <div class="dev-card"><div class="dev-avatar">DS</div><div class="dev-info"><div class="dn">Daniel Steinkuhl</div><div class="de">danielsbodymanufaktur@gmail.com</div></div></div></div>
     <div class="legal-block"><div class="lt">Datenschutz</div>
       <p>Alle Angaben in dieser App werden ausschließlich lokal in deinem Konto gespeichert und nicht an Dritte weitergegeben.</p></div>
+    <div class="legal-block"><div class="lt">Daten verwalten</div>
+      <button class="btn btn-ghost btn-block" onclick="App.resetAll()">App-Daten zurücksetzen</button></div>
   `;
 };
 
