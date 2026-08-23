@@ -22,27 +22,40 @@
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility;}
 body{background:var(--bg-parchment); font-family:var(--font-body); color:var(--ink);
   display:flex; flex-direction:column; align-items:center; min-height:100vh; min-height:100dvh;}
 button{font-family:var(--font-body); cursor:pointer;}
 input,textarea,select{font-family:var(--font-body);}
 .phone{width:100%; max-width:100%; height:100vh; height:100dvh; background:var(--bg-parchment);
   overflow:hidden; position:relative; display:flex; flex-direction:column;}
-#screen{flex:1; overflow-y:auto; padding:calc(20px + env(safe-area-inset-top)) 18px calc(92px + env(safe-area-inset-bottom));}
+#screen{flex:1; overflow-y:auto; padding:calc(20px + env(safe-area-inset-top)) 18px calc(92px + env(safe-area-inset-bottom));
+  scroll-behavior:smooth; -webkit-overflow-scrolling:touch;}
 .hidden{display:none !important;}
+
+/* ---- tap feedback ---- */
+button, .fn-card, .tab, .tag, .workout-card, .horse-chip, .plan-chip, .check-item-top, .contact-row,
+.termin-row, .suggest-item, .opt, .avatar-wrap, .who, .quiz-nudge, .reminder-banner, .add-chip,
+.add-contact, .add-termin, .wd-row, .badge-pill, .cost-row{
+  transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+button:active, .fn-card:active, .tag:active, .workout-card:active, .horse-chip:active,
+.plan-chip:active, .quiz-nudge:active, .add-chip:active, .suggest-item:active{
+  transform:scale(.97); opacity:.9;
+}
 
 /* ---- shared ---- */
 .back-row{display:flex; align-items:center; gap:10px; margin-bottom:16px;}
 .back-btn{width:32px; height:32px; border-radius:50%; background:var(--cream-card); border:1px solid var(--line);
-  display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--forest-deep);}
+  display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--forest-deep); box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .page-title{font-family:var(--font-display); font-size:21px; font-weight:600; color:var(--forest-deep);}
 .section-label{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
   color:var(--ink-soft); margin:0 0 10px 2px;}
-.card{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px;}
+.card{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .btn{border:none; border-radius:12px; padding:11px 16px; font-weight:700; font-size:13px;}
-.btn-primary{background:var(--forest-deep); color:#F6F1E4;}
-.btn-gold{background:var(--gold-ribbon); color:#26332A;}
-.btn-ghost{background:var(--cream-card); border:1px solid var(--line); color:var(--forest-deep);}
+.btn-primary{background:var(--forest-deep); color:#F6F1E4; box-shadow:0 3px 8px rgba(38,51,42,.28);}
+.btn-gold{background:var(--gold-ribbon); color:#26332A; box-shadow:0 3px 8px rgba(201,162,39,.35);}
+.btn-ghost{background:var(--cream-card); border:1px solid var(--line); color:var(--forest-deep); box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .btn-block{width:100%;}
 .field{margin-bottom:14px;}
 .field label{display:block; font-size:11px; font-weight:700; color:var(--ink-soft); margin-bottom:5px; text-transform:uppercase; letter-spacing:.05em;}
@@ -57,7 +70,7 @@ input,textarea,select{font-family:var(--font-body);}
   background:var(--forest-deep); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; border:2px solid var(--bg-parchment);}
 .chip-row{display:flex; gap:8px; flex-wrap:wrap;}
 .tag{font-size:11px; font-weight:700; padding:6px 11px; border-radius:16px; border:1px solid var(--line);
-  color:var(--ink-soft); background:var(--cream-card);}
+  color:var(--ink-soft); background:var(--cream-card); box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .tag.on{background:var(--saddle-tan); color:#fff; border-color:var(--saddle-tan);}
 .empty-hint{font-size:12px; color:var(--ink-soft); text-align:center; padding:18px 10px;}
 
@@ -82,7 +95,7 @@ input,textarea,select{font-family:var(--font-body);}
 .horse-chip span{font-size:10.5px; color:var(--ink-soft); font-weight:600; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:56px;}
 .add-chip{width:50px; height:50px; border-radius:50%; border:2px dashed var(--saddle-tan);
   display:flex; align-items:center; justify-content:center; color:var(--saddle-tan); font-size:20px; cursor:pointer; background:none;}
-.train-week-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:15px 16px; margin-bottom:16px;}
+.train-week-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:15px 16px; margin-bottom:16px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .tw-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;}
 .tw-title{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); font-weight:700;}
 .tw-count{font-family:var(--font-mono); font-size:17px; color:var(--forest-deep); font-weight:700;}
@@ -103,7 +116,7 @@ input,textarea,select{font-family:var(--font-body);}
 .reminder-banner span{font-size:12px; color:var(--ink-soft);}
 .fn-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;}
 .fn-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:16px 14px;
-  display:flex; flex-direction:column; gap:22px; min-height:92px; border:1px solid var(--line);}
+  display:flex; flex-direction:column; gap:22px; min-height:92px; border:1px solid var(--line); box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .fn-card .ic{font-size:22px;}
 .fn-card .tt{font-weight:700; font-size:13.5px; color:var(--forest-deep);}
 .fn-card .dd{font-size:11px; color:var(--ink-soft); margin-top:2px;}
@@ -113,20 +126,29 @@ input,textarea,select{font-family:var(--font-body);}
 .home-footer span{cursor:pointer;}
 .home-footer .fs-dot{text-decoration:none;}
 
+.sponsor-banner{position:relative; display:flex; align-items:center; gap:11px; background:var(--cream-card);
+  border:1px solid var(--line); border-radius:14px; padding:10px 12px; margin-bottom:12px; opacity:.92;}
+.sponsor-tag{position:absolute; top:-7px; left:10px; background:var(--bg-parchment); border:1px solid var(--line);
+  border-radius:6px; padding:1px 6px; font-size:8.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em;}
+.sp-logo{font-size:20px; flex-shrink:0;}
+.sp-text{display:flex; flex-direction:column; min-width:0;}
+.sp-text b{font-size:11.5px; color:var(--forest-deep); font-weight:700;}
+.sp-text span{font-size:10px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
 /* ---- tabs ---- */
 .tab-row{display:flex; gap:7px; margin-bottom:18px; flex-wrap:wrap;}
 .tab{font-size:11.5px; font-weight:700; padding:7px 12px; border-radius:20px; border:1px solid var(--line);
-  color:var(--ink-soft); background:var(--cream-card);}
+  color:var(--ink-soft); background:var(--cream-card); box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .tab.on{background:var(--forest-deep); color:#F6F1E4; border-color:var(--forest-deep);}
 
 /* ---- exercises ---- */
 .plan-scroll{display:flex; gap:10px; overflow-x:auto; margin-bottom:18px; padding-bottom:2px;}
 .plan-chip{flex-shrink:0; min-width:118px; background:var(--cream-card); border:1.5px solid var(--line);
-  border-radius:14px; padding:12px 14px;}
+  border-radius:14px; padding:12px 14px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .plan-chip.on{border-color:var(--gold-ribbon); background:#FBF4DE;}
 .plan-chip .pc-t{font-weight:700; font-size:12.5px; color:var(--forest-deep);}
 .plan-chip .pc-d{font-size:10.5px; color:var(--ink-soft); margin-top:3px;}
-.exercise-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; overflow:hidden; margin-bottom:14px;}
+.exercise-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; overflow:hidden; margin-bottom:14px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .ex-img{height:110px; background:linear-gradient(135deg,#DCC9A3,#B98E5F); display:flex; align-items:center; justify-content:center; font-size:32px;}
 .ex-body{padding:13px 15px 15px;}
 .ex-title{font-weight:700; font-size:14px; color:var(--forest-deep); display:flex; justify-content:space-between; align-items:center;}
@@ -139,19 +161,51 @@ input,textarea,select{font-family:var(--font-body);}
 .log-btn{margin-top:10px; width:100%; background:var(--forest-deep); color:#F6F1E4; border:none; border-radius:9px; padding:8px; font-size:11.5px; font-weight:700;}
 
 .suggest-item{display:flex; align-items:center; gap:11px; background:var(--cream-card); border:1px solid var(--line);
-  border-radius:12px; padding:11px 12px; margin-bottom:8px; cursor:pointer;}
+  border-radius:12px; padding:11px 12px; margin-bottom:8px; cursor:pointer; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .suggest-item.on{border-color:var(--forest-mid); background:#EAF0E7;}
 .sug-check{width:18px; height:18px; border-radius:6px; border:1.5px solid var(--saddle-tan); flex-shrink:0;
   display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff;}
 .suggest-item.on .sug-check{background:var(--forest-mid); border-color:var(--forest-mid);}
 .sug-info .st{font-weight:700; font-size:12.5px; color:var(--forest-deep);}
 .sug-info .sd{font-size:10.5px; color:var(--ink-soft);}
-.plan-preview{background:var(--forest-deep); color:#F6F1E4; border-radius:16px; padding:14px 16px; margin-top:16px;}
+.plan-preview{background:var(--forest-deep); color:#F6F1E4; border-radius:16px; padding:14px 16px; margin-top:16px; box-shadow:0 4px 12px rgba(38,51,42,.22);}
 .plan-preview .pp-title{font-family:var(--font-display); font-size:14px; font-weight:600; margin-bottom:6px;}
 .plan-preview .pp-list{font-size:11.5px; opacity:.85; line-height:1.5; margin-bottom:10px;}
 
+/* ---- rider workouts ---- */
+.workout-card{display:flex; align-items:center; gap:14px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:16px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
+.wc-icon{font-size:26px; flex-shrink:0;}
+.wc-body{flex:1;}
+.wc-title{font-weight:700; font-size:14px; color:var(--forest-deep);}
+.wc-desc{font-size:11.5px; color:var(--ink-soft); margin-top:2px;}
+.wc-arrow{font-size:20px; color:var(--saddle-tan);}
+.workout-hero{background:var(--forest-deep); color:#F6F1E4; border-radius:18px; padding:20px; text-align:center; margin-bottom:18px; box-shadow:0 4px 12px rgba(38,51,42,.22);}
+.wh-icon{font-size:36px; margin-bottom:6px;}
+.wh-desc{font-size:12.5px; opacity:.85;}
+.wd-row{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:12px; padding:10px 12px; margin-bottom:7px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
+.wd-num{width:22px; height:22px; border-radius:50%; background:var(--saddle-tan); color:#fff; font-size:11px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.wd-ic{font-size:18px;}
+.wd-info{flex:1;}
+.wd-t{font-weight:700; font-size:12.5px; color:var(--forest-deep);}
+.wd-m{font-size:10.5px; color:var(--ink-soft);}
+.workout-player{background:var(--cream-card); border:1px solid var(--line); border-radius:20px; padding:26px 20px; text-align:center; margin-bottom:18px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
+.wp-count{font-family:var(--font-mono); font-size:10.5px; color:var(--chestnut); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px;}
+.wp-icon{font-size:52px; margin-bottom:10px;}
+.wp-title{font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--forest-deep); margin-bottom:6px;}
+.wp-target{font-family:var(--font-mono); font-size:16px; color:var(--forest-mid); font-weight:600; margin-bottom:14px;}
+.wp-why{background:#F0ECDD; border-left:3px solid var(--saddle-tan); border-radius:6px; padding:9px 11px; font-size:11.5px;
+  color:var(--ink-soft); line-height:1.45; text-align:left;}
+.wp-why b{color:var(--forest-deep);}
+.workout-done{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-top:60px;}
+.wdone-icon{font-size:56px; margin-bottom:14px;}
+.wdone-title{font-family:var(--font-display); font-size:24px; font-weight:600; color:var(--forest-deep); margin-bottom:8px;}
+.wdone-sub{font-size:13px; color:var(--ink-soft); max-width:260px;}
+
 /* ---- arena ---- */
-.arena-card{background:var(--forest-deep); border-radius:18px; padding:16px; color:#F6F1E4; margin-bottom:16px;}
+.arena-card{background:var(--forest-deep); border-radius:18px; padding:16px; color:#F6F1E4; margin-bottom:16px; box-shadow:0 4px 12px rgba(38,51,42,.22);}
 .arena-card .tt{font-family:var(--font-display); font-size:15px; font-weight:600; margin-bottom:10px;}
 .arena-grid{background:#3B4A3B; border-radius:10px; height:190px; position:relative; cursor:crosshair;
   background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 25px),
@@ -167,7 +221,7 @@ input,textarea,select{font-family:var(--font-body);}
 
 /* ---- history ---- */
 .hist-row{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
-  border-radius:14px; padding:11px 12px; margin-bottom:8px;}
+  border-radius:14px; padding:11px 12px; margin-bottom:8px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .hist-ic{width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;}
 .hist-ic.rider{background:#F3E6D6; color:var(--chestnut);}
 .hist-ic.horse{background:#EAF0E7; color:var(--forest-mid);}
@@ -177,7 +231,7 @@ input,textarea,select{font-family:var(--font-body);}
 .hist-del{font-size:14px; color:var(--ink-soft); flex-shrink:0;}
 
 /* ---- calendar ---- */
-.cal-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:16px; margin-bottom:18px;}
+.cal-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:16px; margin-bottom:18px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
 .cal-head .cm{font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--forest-deep);}
 .cal-nav{display:flex; gap:6px;}
@@ -194,7 +248,7 @@ input,textarea,select{font-family:var(--font-body);}
 .add-termin{display:flex; align-items:center; justify-content:center; gap:6px; border:1.5px dashed var(--saddle-tan);
   border-radius:12px; padding:10px; color:var(--chestnut); font-size:12px; font-weight:700; margin-top:14px; background:none; width:100%;}
 .termin-row{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
-  border-radius:14px; padding:11px 12px; margin-bottom:8px;}
+  border-radius:14px; padding:11px 12px; margin-bottom:8px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .termin-date{width:42px; text-align:center; flex-shrink:0; background:#F0ECDD; border-radius:9px; padding:5px 0; font-family:var(--font-mono);}
 .termin-date .dd2{font-size:14px; font-weight:700; color:var(--forest-deep); line-height:1;}
 .termin-date .mm{font-size:8.5px; color:var(--ink-soft); text-transform:uppercase;}
@@ -206,7 +260,7 @@ input,textarea,select{font-family:var(--font-body);}
 .guide-banner{background:var(--forest-deep); color:#F6F1E4; border-radius:16px; padding:14px 16px; margin-bottom:16px;}
 .guide-banner .gt{font-family:var(--font-display); font-size:15px; font-weight:600; margin-bottom:4px;}
 .guide-banner .gd{font-size:11px; opacity:.8; line-height:1.4;}
-.check-item{background:var(--cream-card); border:1px solid var(--line); border-radius:12px; padding:11px 12px; margin-bottom:7px;}
+.check-item{background:var(--cream-card); border:1px solid var(--line); border-radius:12px; padding:11px 12px; margin-bottom:7px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .check-item-top{display:flex; align-items:center; gap:11px; cursor:pointer;}
 .check-box{width:18px; height:18px; border-radius:6px; border:1.5px solid var(--saddle-tan); flex-shrink:0;
   display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff;}
@@ -223,7 +277,7 @@ input,textarea,select{font-family:var(--font-body);}
 .cost-summary .cs-label{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em;}
 .cost-summary .cs-val{font-family:var(--font-mono); font-size:19px; color:var(--forest-deep); font-weight:600;}
 .cost-row{display:flex; align-items:center; gap:10px; background:var(--cream-card); border:1px solid var(--line);
-  border-radius:12px; padding:9px 12px; margin-bottom:6px;}
+  border-radius:12px; padding:9px 12px; margin-bottom:6px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .cost-row .cr-name{flex:1; font-size:12px; font-weight:600; color:var(--forest-deep);}
 .cost-row .cr-val{font-family:var(--font-mono); font-size:12px; color:var(--chestnut); font-weight:700;}
 
@@ -231,7 +285,7 @@ input,textarea,select{font-family:var(--font-body);}
 .contact-group{margin-bottom:18px;}
 .group-title{font-size:10.5px; font-weight:700; color:var(--chestnut); text-transform:uppercase; letter-spacing:.08em; margin:0 0 8px 2px;}
 .contact-row{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
-  border-radius:14px; padding:11px 12px; margin-bottom:8px;}
+  border-radius:14px; padding:11px 12px; margin-bottom:8px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .contact-ic{width:38px; height:38px; border-radius:50%; background:var(--forest-deep); color:#F6F1E4;
   display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
 .contact-info{flex:1; min-width:0;}
@@ -243,13 +297,13 @@ input,textarea,select{font-family:var(--font-body);}
   border-radius:14px; padding:12px; color:var(--chestnut); font-size:12px; font-weight:700; margin-top:4px; background:none; width:100%;}
 
 /* ---- quiz ---- */
-.quiz-hero{background:linear-gradient(135deg,var(--forest-deep),#3A4A3B); border-radius:20px; padding:18px; color:#F6F1E4; margin-bottom:18px;}
+.quiz-hero{background:linear-gradient(135deg,var(--forest-deep),#3A4A3B); border-radius:20px; padding:18px; color:#F6F1E4; margin-bottom:18px; box-shadow:0 4px 14px rgba(38,51,42,.25);}
 .quiz-hero .day{font-family:var(--font-mono); font-size:10.5px; opacity:.7; text-transform:uppercase; letter-spacing:.1em;}
 .quiz-hero .qtitle{font-family:var(--font-display); font-size:19px; font-weight:600; margin:4px 0 12px;}
 .quiz-progress-row{display:flex; gap:5px;}
 .qp-dot{flex:1; height:5px; border-radius:4px; background:rgba(255,255,255,.2);}
 .qp-dot.done{background:var(--gold-ribbon);}
-.qcard{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:18px; margin-bottom:16px;}
+.qcard{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .qcard .qn{font-family:var(--font-mono); font-size:10px; color:var(--chestnut); text-transform:uppercase; letter-spacing:.08em;}
 .qcard .qtext{font-weight:700; font-size:14.5px; color:var(--forest-deep); margin:6px 0 14px; line-height:1.35;}
 .opt{display:flex; align-items:center; gap:10px; padding:11px 12px; border:1.5px solid var(--line); border-radius:12px;
@@ -260,10 +314,10 @@ input,textarea,select{font-family:var(--font-body);}
 .opt.correct .dotc{background:var(--forest-mid); border-color:var(--forest-mid);}
 .opt.wrong .dotc{background:var(--chestnut); border-color:var(--chestnut);}
 .badges-row{display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;}
-.badge-pill{flex:1; min-width:80px; background:var(--cream-card); border:1px solid var(--line); border-radius:14px; padding:12px 8px; text-align:center;}
+.badge-pill{flex:1; min-width:80px; background:var(--cream-card); border:1px solid var(--line); border-radius:14px; padding:12px 8px; text-align:center; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .badge-pill .bi{font-size:20px;}
 .badge-pill .bt{font-size:9px; font-weight:700; color:var(--ink-soft); margin-top:4px;}
-.qlevel-card{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;}
+.qlevel-card{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .qlevel-card .ql-t{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; font-weight:700;}
 .qlevel-card .ql-v{font-family:var(--font-display); font-size:17px; color:var(--forest-deep); font-weight:600; margin-top:2px;}
 .qlevel-card .ql-n{font-family:var(--font-mono); font-size:20px; color:var(--gold-ribbon);}
@@ -273,7 +327,7 @@ input,textarea,select{font-family:var(--font-body);}
 .legal-block .lt{font-size:11px; font-weight:700; color:var(--chestnut); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;}
 .legal-block p{font-size:12px; color:var(--ink); line-height:1.6; margin:0 0 4px;}
 .dev-card{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
-  border-radius:16px; padding:14px; margin-top:6px;}
+  border-radius:16px; padding:14px; margin-top:6px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .dev-avatar{width:44px; height:44px; border-radius:50%; background:var(--forest-deep); color:#F6F1E4;
   display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:16px; flex-shrink:0;}
 .dev-info .dn{font-weight:700; font-size:13px; color:var(--forest-deep);}
@@ -284,7 +338,7 @@ input,textarea,select{font-family:var(--font-body);}
   padding:calc(36px + env(safe-area-inset-top)) 22px calc(30px + env(safe-area-inset-bottom)); color:var(--ink); overflow-y:auto;}
 .onb-helper{width:64px; height:64px; border-radius:50%; background:var(--forest-deep); display:flex; align-items:center;
   justify-content:center; font-size:28px; margin-bottom:16px; box-shadow:0 6px 16px rgba(0,0,0,.12); border:3px solid var(--cream-card);}
-.onb-bubble{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:18px; font-size:13.5px; line-height:1.55; color:var(--ink);}
+.onb-bubble{background:var(--cream-card); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:18px; font-size:13.5px; line-height:1.55; color:var(--ink); box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .onb-bubble b{color:var(--chestnut);}
 .onb-title{font-family:var(--font-display); font-size:22px; font-weight:600; margin-bottom:6px; color:var(--forest-deep);}
 .onb-sub{font-size:12px; color:var(--ink-soft); margin-bottom:18px;}
@@ -303,7 +357,7 @@ input,textarea,select{font-family:var(--font-body);}
 .onb-skip{text-align:center; font-size:11.5px; color:var(--ink-soft); margin-top:10px; text-decoration:underline; cursor:pointer;}
 
 .navbar{position:absolute; bottom:0; left:0; right:0; height:calc(64px + env(safe-area-inset-bottom)); background:var(--cream-card); border-top:1px solid var(--line);
-  display:flex; align-items:center; justify-content:space-around; padding-bottom:calc(6px + env(safe-area-inset-bottom)); z-index:10;}
+  display:flex; align-items:center; justify-content:space-around; padding-bottom:calc(6px + env(safe-area-inset-bottom)); z-index:10; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .nav-item{display:flex; flex-direction:column; align-items:center; gap:2px; font-size:9px; color:var(--ink-soft);}
 .nav-item.on{color:var(--forest-deep); font-weight:700;}
 .nav-item .ni{font-size:17px;}
@@ -329,13 +383,26 @@ input,textarea,select{font-family:var(--font-body);}
   <div id="navbar" class="navbar hidden">
     <div class="nav-item" data-nav="home" onclick="Nav.go('home')"><div class="ni">🏠</div>Home</div>
     <div class="nav-item" data-nav="training" onclick="Nav.go('training')"><div class="ni">🏇</div>Training</div>
-    <div class="nav-item" data-nav="care" onclick="Nav.go('care')"><div class="ni">🩺</div>Versorgung</div>
+    <div class="nav-item" data-nav="care" onclick="Nav.go('care')"><div class="ni">🩺</div>Terminplanung</div>
     <div class="nav-item" data-nav="costs" onclick="Nav.go('costs')"><div class="ni">💶</div>Kosten</div>
     <div class="nav-item" data-nav="quiz" onclick="Nav.go('quiz')"><div class="ni">🎯</div>Quiz</div>
   </div>
 </div>
 
 <script>
+/* ============================= SPONSOR-EINSTELLUNGEN =============================
+   Hier kannst du später einen Sponsor eintragen. Sobald "enabled" auf true steht
+   und Name + Text ausgefüllt sind, erscheint unten auf der Startseite ein dezenter,
+   klar als Anzeige gekennzeichneter Banner. Standardmäßig ist er ausgeblendet.
+================================================================================= */
+const SPONSOR = {
+  enabled: true,          // auf true setzen, sobald ein Sponsor aktiv ist
+  logo: '📢',               // Emoji oder kurzes Kürzel als Platzhalter fürs Logo
+  name: 'Hier könnte deine Werbung stehen',       // z. B. "Musterstall Reitsport GmbH"
+  tagline: 'Platz für einen Sponsor · Kontakt: danielsbodymanufaktur@gmail.com',  // z. B. "10% Rabatt auf Reitzubehör für Stallbuch-Nutzer"
+  url: '',                  // z. B. "https://www.beispiel-shop.de"
+};
+
 /* ============================= DATA / STORAGE ============================= */
 const DEFAULT_STATE = {
   onboarded:false,
@@ -367,28 +434,38 @@ function fmtDate(iso){ const d=new Date(iso+'T00:00:00'); return d.toLocaleDateS
 function euro(n){ return n.toLocaleString('de-DE',{minimumFractionDigits:2, maximumFractionDigits:2})+' €'; }
 
 /* ============================= STATIC CONTENT ============================= */
-const RIDER_EXERCISES = [
-  {id:'core1', cat:'Rumpf', label:'Rumpf', title:'Unterarmstütz (Plank)', meta:'3×30 Sek.', img:'🧘',
+const EXERCISE_LIBRARY = {
+  plank:{title:'Plank', img:'🧘', target:'30 Sek.', seconds:30,
     why:'Ein stabiler Rumpf ermöglicht einen unabhängigen Sitz und entlastet den Pferderücken bei jeder Bewegung.'},
-  {id:'core2', cat:'Rumpf', label:'Rumpf', title:'Seitstütz', meta:'2×20 Sek./Seite', img:'🧘',
-    why:'Trainiert die seitliche Rumpfmuskulatur – wichtig, um in Wendungen nicht aus dem Sitz zu kippen.'},
-  {id:'leg1', cat:'Bein & Sitz', label:'Bein & Sitz', title:'Kniebeugen', meta:'3×12 Wdh.', img:'🦵',
+  superman:{title:'Superman', img:'🦸', target:'12 Wdh.', seconds:0,
+    why:'Kräftigt den unteren Rücken – wichtig für eine aufrechte, stabile Haltung im Sattel.'},
+  squat:{title:'Kniebeuge', img:'🦵', target:'15 Wdh.', seconds:0,
     why:'Kräftige, ruhige Beine verhindern unbeabsichtigte Hilfen und geben dem Pferd klare Signale.'},
-  {id:'leg2', cat:'Bein & Sitz', label:'Bein & Sitz', title:'Ausfallschritte', meta:'2×10 pro Bein', img:'🦵',
+  pushup:{title:'Push-ups', img:'💪', target:'10 Wdh.', seconds:0,
+    why:'Stärkt Arme und Schultern für eine ruhige, unabhängige Zügelhand.'},
+  crunch:{title:'Crunch', img:'🔥', target:'15 Wdh.', seconds:0,
+    why:'Trainiert die Bauchmuskulatur als Gegenspieler zum Rücken – zusammen tragen sie deinen Sitz.'},
+  jjacks:{title:'Hampelmann', img:'🤸', target:'30 Sek.', seconds:30,
+    why:'Bringt Kreislauf und Puls hoch – ein gutes Warm-up für den restlichen Trainingsplan.'},
+  wallsit:{title:'Wandsitz', img:'🧱', target:'30 Sek.', seconds:30,
+    why:'Baut isometrische Kraft in den Oberschenkeln auf – wichtig für einen ruhigen Sitz auch bei Ermüdung.'},
+  stepup:{title:'Step-up', img:'🪜', target:'30 Sek.', seconds:30,
+    why:'Trainiert einseitige Beinkraft und Koordination, wie sie beim Aufsteigen und in Wendungen gebraucht wird.'},
+  tricepdip:{title:'Trizeps-Dips', img:'💪', target:'30 Sek.', seconds:30,
+    why:'Kräftigt die Armrückseite für eine feine, stabile Zügelführung.'},
+  sideplank:{title:'Seitstütz', img:'🧘', target:'30 Sek.', seconds:30,
+    why:'Trainiert die seitliche Rumpfmuskulatur – wichtig, um in Wendungen nicht aus dem Sitz zu kippen.'},
+  highknees:{title:'Knieheben', img:'🏃', target:'30 Sek.', seconds:30,
+    why:'Bringt Ausdauer und Koordination – hilfreich für die Kondition während einer ganzen Reitstunde.'},
+  lunge:{title:'Ausfallschritt', img:'🦵', target:'30 Sek.', seconds:30,
     why:'Verbessert die Stabilität im Sattel und die unabhängige Beinhaltung.'},
-  {id:'bal1', cat:'Balance', label:'Balance', title:'Einbeinstand', meta:'2×45 Sek.', img:'🤸',
-    why:'Trainiert das Ausgleichen von Bewegung, wie es beim Reiten ständig gefordert wird.'},
-  {id:'bal2', cat:'Balance', label:'Balance', title:'Balance-Kissen Stand', meta:'2×40 Sek.', img:'🤸',
-    why:'Schult die Tiefenmuskulatur, die für einen ruhigen, mitschwingenden Sitz sorgt.'},
-  {id:'mob1', cat:'Beweglichkeit', label:'Beweglichkeit', title:'Hüftöffner', meta:'2×30 Sek./Seite', img:'🤾',
-    why:'Bewegliche Hüften lassen dich mit der Pferdebewegung mitschwingen statt dagegen zu arbeiten.'},
-  {id:'mob2', cat:'Beweglichkeit', label:'Beweglichkeit', title:'Wirbelsäulenrotation', meta:'2×10 Wdh.', img:'🤾',
-    why:'Erhält die Beweglichkeit des Oberkörpers für feine, unabhängige Hilfengebung.'},
-];
-const RIDER_PLANS = [
-  {id:'plan15', title:'15-Min-Reiterfit', desc:'Ganzkörper · kurz', ex:['core1','leg1','bal1','mob1']},
-  {id:'plancore', title:'Rumpf-Fokus', desc:'4 Übungen', ex:['core1','core2','bal1','bal2']},
-  {id:'planmob', title:'Beweglichkeit', desc:'vor dem Reiten', ex:['mob1','mob2','bal1']},
+};
+
+const RIDER_WORKOUTS = [
+  {id:'ganzkoerper', title:'Ganzkörpertraining', icon:'💪', desc:'5 Übungen · ca. 15 Min', minutes:15,
+    exercises:['plank','superman','squat','pushup','crunch']},
+  {id:'sevenmin', title:'7-Minuten-Training', icon:'⏱️', desc:'8 Übungen · ca. 7 Min', minutes:7,
+    exercises:['jjacks','wallsit','pushup','crunch','stepup','squat','tricepdip','plank']},
 ];
 const HORSE_SUGGESTIONS = {
   Dressur:[{id:'d1',title:'Schritt-Aufwärmen',desc:'10 Min · lockere Anlehnung'},
@@ -411,6 +488,7 @@ const COST_GUIDE = [
   {key:'tierarzt', label:'Tierarzt & Versicherung', icon:'🩺', defFreq:'monatlich'},
   {key:'ausruestung', label:'Ausrüstung / Sattelzeug', icon:'🎽', defFreq:'einmalig'},
   {key:'unterricht', label:'Reitunterricht', icon:'🎓', defFreq:'monatlich'},
+  {key:'beritt', label:'Beritt', icon:'🏇', defFreq:'monatlich'},
   {key:'turnier', label:'Turniere & Startgelder', icon:'🏆', defFreq:'einmalig'},
   {key:'auto', label:'Auto: Sprit & Unterhalt', icon:'🚗', defFreq:'monatlich'},
   {key:'haenger', label:'Pferdehänger: Anschaffung/Miete', icon:'🚚', defFreq:'einmalig'},
@@ -581,18 +659,25 @@ Screens.home = function(){
     ${nextAppt ? `
     <div class="reminder-banner" onclick="Nav.go('care')">
       <div class="dot"></div>
-      <div><b>${esc(nextAppt.title)} – ${daysUntil(nextAppt.date)}</b><span>${esc(horseName(nextAppt.horseId))} · Termin ${fmtDate(nextAppt.date)}</span></div>
+      <div><b>${esc(nextAppt.title)} – ${daysUntil(nextAppt.date)}</b><span>${esc(horseName(nextAppt.horseId))} · Termin ${fmtDate(nextAppt.date)}${nextAppt.time?' · '+esc(nextAppt.time)+' Uhr':''}</span></div>
     </div>` : ''}
 
     <div class="section-label">Bereiche</div>
     <div class="fn-grid">
       <div class="fn-card" onclick="Nav.go('training')"><div class="ic">🏇</div><div><div class="tt">Training</div><div class="dd">Pferd & Reiter</div></div></div>
-      <div class="fn-card" onclick="Nav.go('care')"><div class="ic">🩺</div><div><div class="tt">Versorgung</div><div class="dd">Termine & Futter</div></div></div>
+      <div class="fn-card" onclick="Nav.go('care')"><div class="ic">🩺</div><div><div class="tt">Terminplanung</div><div class="dd">Termine & Futter</div></div></div>
       <div class="fn-card" onclick="Nav.go('costs')"><div class="ic">💶</div><div><div class="tt">Kosten</div><div class="dd">Ausgaben im Blick</div></div></div>
       <div class="fn-card" onclick="Nav.go('contacts')"><div class="ic">📇</div><div><div class="tt">Kontakte</div><div class="dd">Stall, Ärzte & Co.</div></div></div>
       <div class="fn-card" onclick="Screens.nutritionInfo()"><div class="ic">🥕</div><div><div class="tt">Ernährung</div><div class="dd">Tipps Pferd & Du</div></div></div>
       <div class="fn-card wide" onclick="Nav.go('quiz')"><div class="ic">🎯</div><div><div class="tt">Tägliches Quiz</div><div class="dd">${quizDoneToday?'Heute schon erledigt ✓':'5 neue Fragen warten auf dich'}</div></div></div>
     </div>
+
+    ${SPONSOR.enabled && SPONSOR.name ? `
+    <div class="sponsor-banner" onclick="${SPONSOR.url ? `window.open('${SPONSOR.url}','_blank')` : ''}">
+      <span class="sponsor-tag">Anzeige</span>
+      <div class="sp-logo">${SPONSOR.logo}</div>
+      <div class="sp-text"><b>${esc(SPONSOR.name)}</b>${SPONSOR.tagline?`<span>${esc(SPONSOR.tagline)}</span>`:''}</div>
+    </div>` : ''}
 
     <div class="home-footer">
       <span onclick="Nav.go('legal')">Impressum</span><span class="fs-dot">·</span><span onclick="Nav.go('legal')">Kontakt zum Entwickler</span>
@@ -676,29 +761,107 @@ Screens.renderTrainTab = function(){
   if(Nav.trainTab==='arena') Screens.mountArena();
 };
 Screens.riderPanel = function(){
-  const plans = RIDER_PLANS.map(p=>`<div class="plan-chip" onclick="App.logPlan('${p.id}')"><div class="pc-t">${p.title}</div><div class="pc-d">${p.desc}</div></div>`).join('');
-  const cats = ['Alle','Rumpf','Bein & Sitz','Balance','Beweglichkeit'];
-  const activeCat = Nav.riderCat || 'Alle';
-  const tags = cats.map(c=>`<div class="tag ${activeCat===c?'on':''}" onclick="Screens.setRiderCat('${c}')">${c}</div>`).join('');
-  const list = RIDER_EXERCISES.filter(e=> activeCat==='Alle' || e.cat===activeCat).map(e=>`
-    <div class="exercise-card">
-      <div class="ex-img">${e.img}</div>
-      <div class="ex-body">
-        <div class="ex-title">${e.title} <span class="ex-meta">${e.meta}</span></div>
-        <div class="ex-tag-mini">${e.label}</div>
-        <div class="ex-why"><b>Warum:</b> ${e.why}</div>
-        <button class="log-btn" onclick="App.logExercise('${e.id}')">Als erledigt eintragen</button>
-      </div>
+  const cards = RIDER_WORKOUTS.map(w=>`
+    <div class="workout-card" onclick="Screens.workoutDetail('${w.id}')">
+      <div class="wc-icon">${w.icon}</div>
+      <div class="wc-body"><div class="wc-title">${w.title}</div><div class="wc-desc">${w.desc}</div></div>
+      <div class="wc-arrow">›</div>
     </div>`).join('');
   return `
-    <div class="section-label">Fertige Trainingspläne</div>
-    <div class="plan-scroll">${plans}</div>
-    <div class="section-label">Nach Zielbereich</div>
-    <div class="tag-row" style="margin-bottom:16px;">${tags}</div>
-    ${list}
+    <div class="section-label">Trainingsauswahl</div>
+    ${cards}
+    <div class="empty-hint" style="margin-top:6px;">Weitere Trainingspläne folgen bald.</div>
   `;
 };
-Screens.setRiderCat = function(c){ Nav.riderCat=c; document.getElementById('ttab-content').innerHTML = Screens.riderPanel(); };
+
+Screens.workoutDetail = function(workoutId){
+  const w = RIDER_WORKOUTS.find(x=>x.id===workoutId);
+  const rows = w.exercises.map((exId,i)=>{
+    const ex = EXERCISE_LIBRARY[exId];
+    return `<div class="wd-row"><div class="wd-num">${i+1}</div><div class="wd-ic">${ex.img}</div>
+      <div class="wd-info"><div class="wd-t">${ex.title}</div><div class="wd-m">${ex.target}</div></div></div>`;
+  }).join('');
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('training')">‹</div><div class="page-title">${w.title}</div></div>
+    <div class="workout-hero">
+      <div class="wh-icon">${w.icon}</div>
+      <div class="wh-desc">${w.desc}</div>
+    </div>
+    <div class="section-label">Ablauf</div>
+    ${rows}
+    <button class="btn btn-gold btn-block" style="margin-top:18px;" onclick="Screens.workoutStart('${w.id}')">Training starten</button>
+    <div class="empty-hint">Zählt erst als erledigt, wenn du den kompletten Plan durchgeführt hast.</div>
+  `;
+};
+
+Screens.workoutStart = function(workoutId){
+  Nav.workout = {planId:workoutId, step:0, startedAt:Date.now()};
+  Screens.workoutStep();
+};
+Screens.workoutStep = function(){
+  const w = RIDER_WORKOUTS.find(x=>x.id===Nav.workout.planId);
+  const step = Nav.workout.step;
+  const exId = w.exercises[step];
+  const ex = EXERCISE_LIBRARY[exId];
+  const dots = w.exercises.map((_,i)=>`<div class="qp-dot ${i<step?'done':''}"></div>`).join('');
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Screens.workoutCancel()">✕</div><div class="page-title">${w.title}</div></div>
+    <div class="quiz-progress-row" style="margin-bottom:18px;">${dots}</div>
+    <div class="workout-player">
+      <div class="wp-count">Übung ${step+1} von ${w.exercises.length}</div>
+      <div class="wp-icon">${ex.img}</div>
+      <div class="wp-title">${ex.title}</div>
+      <div class="wp-target" id="wp-target">${ex.target}</div>
+      <div class="wp-why"><b>Warum:</b> ${ex.why}</div>
+    </div>
+    <button class="btn btn-primary btn-block" id="wp-next-btn" onclick="Screens.workoutNext()">
+      ${step<w.exercises.length-1?'Fertig, weiter':'Letzte Übung abschließen'}
+    </button>
+    <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="Screens.workoutCancel()">Abbrechen</button>
+  `;
+  Screens.startWorkoutTimer(ex);
+};
+Screens.startWorkoutTimer = function(ex){
+  if(Nav.workoutTimerId){ clearInterval(Nav.workoutTimerId); Nav.workoutTimerId=null; }
+  if(!ex.seconds) return;
+  let remaining = ex.seconds;
+  const el = document.getElementById('wp-target');
+  Nav.workoutTimerId = setInterval(()=>{
+    remaining--;
+    if(el) el.textContent = remaining>0 ? `noch ${remaining} Sek.` : 'Fertig!';
+    if(remaining<=0){ clearInterval(Nav.workoutTimerId); Nav.workoutTimerId=null; }
+  }, 1000);
+};
+Screens.workoutNext = function(){
+  if(Nav.workoutTimerId){ clearInterval(Nav.workoutTimerId); Nav.workoutTimerId=null; }
+  const w = RIDER_WORKOUTS.find(x=>x.id===Nav.workout.planId);
+  if(Nav.workout.step < w.exercises.length-1){
+    Nav.workout.step++;
+    Screens.workoutStep();
+  } else {
+    Screens.workoutComplete();
+  }
+};
+Screens.workoutCancel = function(){
+  if(Nav.workoutTimerId){ clearInterval(Nav.workoutTimerId); Nav.workoutTimerId=null; }
+  Nav.workout = null;
+  Modal.toast('Training abgebrochen – wurde nicht erfasst.');
+  Nav.go('training');
+};
+Screens.workoutComplete = function(){
+  const w = RIDER_WORKOUTS.find(x=>x.id===Nav.workout.planId);
+  S.trainings.push({id:uid(), kind:'reiter', title:'Reitertraining · '+w.title, minutes:w.minutes, date:todayISO(), category:w.id});
+  saveState();
+  Nav.workout = null;
+  screenEl().innerHTML = `
+    <div class="workout-done">
+      <div class="wdone-icon">🎉</div>
+      <div class="wdone-title">Geschafft!</div>
+      <div class="wdone-sub">${w.title} erfolgreich abgeschlossen und eingetragen.</div>
+      <button class="btn btn-gold btn-block" style="margin-top:20px;" onclick="Nav.go('home')">Zur Startseite</button>
+    </div>
+  `;
+};
 
 Screens.horsePanel = function(){
   const types = Object.keys(HORSE_SUGGESTIONS);
@@ -832,11 +995,11 @@ Screens.care = function(){
   const monthName = now.toLocaleDateString('de-DE',{month:'long', year:'numeric'});
   const dayCells = cells.map(c=>`<div class="cal-day ${c.muted?'muted':''} ${c.today?'today':''}">${c.d}${c.has?'<div class="mark"></div>':''}</div>`).join('');
 
-  const upcoming = S.appointments.filter(a=>a.date>=todayISO()).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  const upcoming = S.appointments.filter(a=>a.date>=todayISO()).sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||'')).slice(0,6);
   const apptRows = upcoming.map(a=>`
     <div class="termin-row">
       <div class="termin-date"><div class="dd2">${a.date.slice(8,10)}</div><div class="mm">${new Date(a.date+'T00:00:00').toLocaleDateString('de-DE',{month:'short'})}</div></div>
-      <div class="termin-info"><div class="tn">${esc(a.title)} · ${esc(horseName(a.horseId))}</div><div class="tr">${esc(a.notes||'')}</div></div>
+      <div class="termin-info"><div class="tn">${esc(a.title)}${a.time?' · '+esc(a.time)+' Uhr':''} · ${esc(horseName(a.horseId))}</div><div class="tr">${esc(a.notes||'')}</div></div>
       <div class="hist-del" onclick="App.deleteAppointment('${a.id}')">✕</div>
     </div>`).join('') || `<div class="empty-hint">Keine anstehenden Termine.</div>`;
 
@@ -851,7 +1014,7 @@ Screens.care = function(){
     </div>`).join('') || `<div class="empty-hint">Noch kein Pferd angelegt.</div>`;
 
   screenEl().innerHTML = `
-    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Versorgung</div></div>
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Terminplanung</div></div>
     <div class="cal-card">
       <div class="cal-head"><div class="cm">${monthName}</div>
         <div class="cal-nav"><div onclick="Screens.calShift(-1)">‹</div><div onclick="Screens.calShift(1)">›</div></div></div>
@@ -872,11 +1035,12 @@ Screens.newAppointment = function(){
   Modal.form('Termin eintragen', [
     {id:'title', label:'Was steht an?', placeholder:'z. B. Hufschmied, Tierarzt'},
     {id:'date', label:'Datum', type:'date', value:todayISO()},
+    {id:'time', label:'Uhrzeit (optional)', type:'time', value:''},
     {id:'horseId', label:'Für welches Pferd?', type:'select', options:horseOptions, value:S.horses[0].id},
     {id:'notes', label:'Notiz (optional)', placeholder:''},
   ], function(v){
     if(!v.title || !v.date){ Modal.toast('Bitte Titel und Datum angeben.'); return; }
-    S.appointments.push({id:uid(), title:v.title, date:v.date, horseId:v.horseId, notes:v.notes});
+    S.appointments.push({id:uid(), title:v.title, date:v.date, time:v.time||'', horseId:v.horseId, notes:v.notes});
     saveState(); Modal.close(); Screens.care();
   });
 };
@@ -912,6 +1076,7 @@ Screens.costsCurrentPanel = function(){
       ${on ? `
       <div class="entry-row">
         <input type="number" step="0.01" placeholder="Betrag in €" id="amt-${g.key}">
+        <input type="date" id="date-${g.key}" value="${todayISO()}">
         <div class="freq-toggle">
           <div class="freq-chip ${draftFreq==='monatlich'?'on':''}" onclick="Screens.setFreq('${g.key}','monatlich')">monatlich</div>
           <div class="freq-chip ${draftFreq==='einmalig'?'on':''}" onclick="Screens.setFreq('${g.key}','einmalig')">einmalig</div>
@@ -1132,7 +1297,7 @@ const NUTRITION_TIPS = {
     {cat:'Kraftfutter', icon:'🌽', title:'Nur bei Bedarf', text:'Kraftfutter nur zufüttern, wenn über Raufutter allein nicht genug Energie gedeckt wird – z. B. bei intensiver Arbeit. Menge an Belastung anpassen.'},
     {cat:'Fütterungsrhythmus', icon:'⏰', title:'Kleine Portionen, oft', text:'Mehrere kleine Portionen über den Tag verteilt sind für den Pferdemagen deutlich besser als ein bis zwei große Mahlzeiten.'},
     {cat:'Vor dem Training', icon:'🏇', title:'Nicht direkt nach dem Fressen reiten', text:'Nach einer größeren Kraftfuttergabe sollte dem Pferd vor dem Training etwas Ruhe zur Verdauung gegeben werden.'},
-    {cat:'Besonderheiten', icon:'📋', title:'Individuelle Bedürfnisse beachten', text:'Allergien, Unverträglichkeiten oder gesundheitliche Einschränkungen deines Pferds im Fütterungsplan (Bereich Versorgung) festhalten.'},
+    {cat:'Besonderheiten', icon:'📋', title:'Individuelle Bedürfnisse beachten', text:'Allergien, Unverträglichkeiten oder gesundheitliche Einschränkungen deines Pferds im Fütterungsplan (Bereich Terminplanung) festhalten.'},
   ],
   Reiter:[
     {cat:'Vor dem Training', icon:'⚡', title:'Leicht verdauliche Energie', text:'Vor dem Reiten lieber eine kleine, leicht verdauliche Mahlzeit oder einen Snack statt einer großen Portion kurz vorher.'},
@@ -1207,18 +1372,6 @@ App.deleteHorse = function(id){
     S.horses = S.horses.filter(h=>h.id!==id); saveState(); Nav.go('home');
   });
 };
-App.logExercise = function(exId){
-  const ex = RIDER_EXERCISES.find(e=>e.id===exId);
-  S.trainings.push({id:uid(), kind:'reiter', title:ex.title, minutes:5, date:todayISO(), category:ex.cat});
-  saveState(); Modal.toast('Übung eingetragen: '+ex.title);
-  Screens.renderTrainTab();
-};
-App.logPlan = function(planId){
-  const plan = RIDER_PLANS.find(p=>p.id===planId);
-  S.trainings.push({id:uid(), kind:'reiter', title:'Reitertraining · '+plan.title, minutes:15, date:todayISO(), category:'Plan'});
-  saveState(); Modal.toast('Plan eingetragen: '+plan.title);
-  Screens.renderTrainTab();
-};
 App.saveHorseSession = function(){
   const picker = document.getElementById('horse-picker');
   if(!picker) return;
@@ -1237,10 +1390,12 @@ App.deleteAppointment = function(id){ S.appointments = S.appointments.filter(a=>
 App.saveFeeding = function(horseId, val){ S.feeding[horseId]=val; saveState(); };
 App.addCost = function(key, label){
   const input = document.getElementById('amt-'+key);
+  const dateInput = document.getElementById('date-'+key);
   const amount = parseFloat(input.value);
   if(!amount || amount<=0){ Modal.toast('Bitte einen gültigen Betrag eingeben.'); return; }
+  const date = (dateInput && dateInput.value) || todayISO();
   const freq = Nav['freq_'+key] || 'monatlich';
-  S.costs.push({id:uid(), key, label, amount, freq, date:todayISO()});
+  S.costs.push({id:uid(), key, label, amount, freq, date});
   saveState(); Screens.renderCostsTab();
 };
 App.deleteCost = function(id){ S.costs = S.costs.filter(c=>c.id!==id); saveState(); Screens.renderCostsTab(); };
@@ -1274,7 +1429,7 @@ Onb.stepWelcome = function(){
     <div class="onb-title">Hallo, ich bin Theo!</div>
     <div class="onb-sub">Dein Stallhelfer für die App</div>
     <div class="onb-bubble">Schön, dass du da bist! Ich zeig dir kurz, wie <b>Stallbuch</b> dir hilft, Training,
-      Versorgung und Kosten rund um deinen Pferdesport im Griff zu behalten – ganz ohne Zettelchaos. Lass uns
+      Terminplanung und Kosten rund um deinen Pferdesport im Griff zu behalten – ganz ohne Zettelchaos. Lass uns
       dein Profil einrichten, das dauert nur eine Minute.</div>
     <div class="onb-spacer"></div>
     <button class="btn btn-gold btn-block" onclick="Onb.next()">Los geht's</button>
@@ -1316,7 +1471,7 @@ Onb.stepTour = function(){
     <div class="onb-title">Das erwartet dich</div>
     <ul class="onb-list">
       <li><span class="oi">🏇</span> <div><b>Training</b> – für dich und dein Pferd, inkl. Reithallen-Planer</div></li>
-      <li><span class="oi">🩺</span> <div><b>Versorgung</b> – Termine & Fütterung im Kalender</div></li>
+      <li><span class="oi">🩺</span> <div><b>Terminplanung</b> – Termine & Fütterung im Kalender</div></li>
       <li><span class="oi">💶</span> <div><b>Kosten</b> – mit Leitfaden für alle Grundausgaben</div></li>
       <li><span class="oi">📇</span> <div><b>Kontakte</b> – Stall, Ärzte & Co. griffbereit</div></li>
       <li><span class="oi">🎯</span> <div><b>Tages-Quiz</b> – 5 Fragen täglich, macht schlauer</div></li>
