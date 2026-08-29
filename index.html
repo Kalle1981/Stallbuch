@@ -95,6 +95,22 @@ button:active, .fn-card:active, .tag:active, .workout-card:active, .horse-chip:a
 .horse-chip span{font-size:10.5px; color:var(--ink-soft); font-weight:600; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:56px;}
 .add-chip{width:50px; height:50px; border-radius:50%; border:2px dashed var(--saddle-tan);
   display:flex; align-items:center; justify-content:center; color:var(--saddle-tan); font-size:20px; cursor:pointer; background:none;}
+
+.badge-shelf{display:flex; gap:10px; overflow-x:auto; padding:2px 2px 8px; margin-bottom:2px;}
+.badge-item{display:flex; flex-direction:column; align-items:center; width:42px; flex-shrink:0;}
+.badge-medal-outer{position:relative; width:34px; height:44px;}
+.badge-medal{position:absolute; top:0; left:0; width:34px; height:34px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #E7C458, var(--gold-ribbon)); border:1.5px solid var(--forest-deep);
+  display:flex; align-items:center; justify-content:center; font-size:14px; box-shadow:0 2px 5px rgba(38,51,42,.3); z-index:2;}
+.badge-medal.locked{background:#D9D3C0; border-color:#B7AF97; box-shadow:none; font-size:11px; opacity:.85;}
+.badge-tail{position:absolute; top:26px; width:8px; height:17px; background:var(--chestnut);
+  clip-path:polygon(0 0,100% 0,100% 78%,50% 100%,0 78%); z-index:1;}
+.badge-tail-l{left:6px; transform:rotate(-10deg);}
+.badge-tail-r{right:6px; transform:rotate(10deg);}
+.badge-tail.locked{background:#B7AF97;}
+.badge-label{font-size:7.5px; font-weight:700; color:var(--forest-deep); text-align:center; line-height:1.2; margin-top:1px;}
+.badge-label.locked{color:var(--ink-soft); opacity:.75;}
+
 .train-week-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:15px 16px; margin-bottom:16px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
 .tw-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;}
 .tw-title{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); font-weight:700;}
@@ -114,6 +130,13 @@ button:active, .fn-card:active, .tag:active, .workout-card:active, .horse-chip:a
 .reminder-banner .dot{width:8px; height:8px; border-radius:50%; background:var(--chestnut); margin-top:5px; flex-shrink:0;}
 .reminder-banner b{display:block; font-size:13px; color:var(--forest-deep);}
 .reminder-banner span{font-size:12px; color:var(--ink-soft);}
+.backup-banner{display:flex; align-items:center; gap:11px; background:var(--forest-deep); color:#F6F1E4;
+  border-radius:16px; padding:12px 14px; margin-bottom:16px; box-shadow:0 4px 12px rgba(38,51,42,.22);}
+.backup-banner .bb-ic{font-size:20px; flex-shrink:0;}
+.backup-banner .bb-text{flex:1;}
+.backup-banner .bb-text b{display:block; font-size:13px;}
+.backup-banner .bb-text span{font-size:11px; opacity:.8;}
+.backup-banner .bb-arrow{font-size:20px; opacity:.7;}
 .fn-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;}
 .fn-card{background:var(--cream-card); border:1px solid var(--line); border-radius:18px; padding:16px 14px;
   display:flex; flex-direction:column; gap:22px; min-height:92px; border:1px solid var(--line); box-shadow:0 1px 3px rgba(38,51,42,.06);}
@@ -334,6 +357,27 @@ button:active, .fn-card:active, .tag:active, .workout-card:active, .horse-chip:a
 .dev-info .dn{font-weight:700; font-size:13px; color:var(--forest-deep);}
 .dev-info .de{font-size:11px; color:var(--ink-soft);}
 
+.file-btn{position:relative; display:block;}
+.file-btn input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+
+/* ---- tournaments ---- */
+.tourn-card{display:flex; align-items:center; gap:12px; background:var(--cream-card); border:1px solid var(--line);
+  border-radius:16px; padding:11px 12px; margin-bottom:10px; box-shadow:0 1px 3px rgba(38,51,42,.06);}
+.tourn-thumb{width:48px; height:48px; border-radius:12px; object-fit:cover; flex-shrink:0; background:var(--saddle-tan);}
+.tourn-thumb-empty{display:flex; align-items:center; justify-content:center; font-size:20px;}
+.tourn-info{flex:1; min-width:0;}
+.tourn-loc{font-weight:700; font-size:13px; color:var(--forest-deep);}
+.tourn-meta{font-size:11px; color:var(--chestnut); margin-top:2px;}
+.tourn-comp{font-size:10.5px; color:var(--ink-soft); margin-top:1px;}
+.tourn-photo-grid{display:flex; flex-wrap:wrap; gap:10px;}
+.tourn-photo-thumb{position:relative; width:76px; height:76px; border-radius:12px; overflow:hidden; flex-shrink:0;}
+.tourn-photo-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+.tourn-photo-del{position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%; background:rgba(20,23,15,.65);
+  color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center;}
+.tourn-photo-add{width:76px; height:76px; border-radius:12px; border:2px dashed var(--saddle-tan); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:24px; color:var(--saddle-tan); position:relative;}
+.tourn-photo-add input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+
 /* ---- onboarding ---- */
 .onb-wrap{position:absolute; inset:0; background:var(--bg-parchment); z-index:40; display:flex; flex-direction:column;
   padding:calc(36px + env(safe-area-inset-top)) 22px calc(30px + env(safe-area-inset-bottom)); color:var(--ink); overflow-y:auto;}
@@ -415,7 +459,9 @@ const DEFAULT_STATE = {
   costs:[],          // {id, key, label, amount, freq, date}
   costChecks:{},      // {key:true}
   contacts:[],        // {id, group, name, role, phone}
-  quiz:{lastDoneDate:null, points:0, correctByCat:{fuetterung:0,kosten:0,training:0}, badges:[]},
+  quiz:{lastDoneDate:null, points:0, correctByCat:{fuetterung:0,kosten:0,training:0,mindset:0,fitness:0}, badges:[]},
+  lastBackupDate:null,
+  tournaments:[],      // {id, location, date, companions, placement, notes, photos:[dataURL,...]}
 };
 
 let S = structuredClone(DEFAULT_STATE);
@@ -498,16 +544,58 @@ const COST_GUIDE = [
 const CONTACT_GROUPS = ['Stall & Training','Tierärztlich','Ausrüstung & Sonstiges'];
 const CONTACT_ICONS = {'Stall & Training':'🏠','Tierärztlich':'🩺','Ausrüstung & Sonstiges':'🧵'};
 
+const BADGE_DEFS = {
+  fuetterung: {icon:'🥕', label:'Fütterungs-Profi', cat:'fuetterung', at:3},
+  kosten:     {icon:'💶', label:'Kosten-Checker',   cat:'kosten',     at:3},
+  training:   {icon:'🏆', label:'Trainingswissen-Profi', cat:'training', at:5},
+  mindset:    {icon:'🧠', label:'Mental stark',     cat:'mindset',    at:3},
+  fitness:    {icon:'💪', label:'Fitness-Kenner',   cat:'fitness',    at:3},
+};
+
 const KNOWLEDGE_QUESTIONS = [
   {q:'Warum ist Rumpfstabilität für Reiter wichtig?', opts:['Für schnelleres Aufsteigen','Ermöglicht unabhängigen Sitz & entlastet den Pferderücken','Nur für den Wettkampf wichtig'], correct:1, cat:'training'},
   {q:'Wie lange sollte ein Pferd im Schritt aufgewärmt werden?', opts:['1–2 Minuten','Ca. 10 Minuten','Aufwärmen ist nicht nötig'], correct:1, cat:'training'},
   {q:'Was fördert Zirkel verkleinern/vergrößern beim Pferd?', opts:['Die Biegung','Die Sprungkraft','Nur die Ausdauer'], correct:0, cat:'training'},
   {q:'Wie oft sollte Reitertraining mindestens stattfinden?', opts:['1× im Monat','Mindestens 2× pro Woche','Nur vor Turnieren'], correct:1, cat:'training'},
   {q:'Was ist die Basis für sicheres Führen von Pferden?', opts:['Lautes Rufen','Ruhiges, konsequentes Auftreten','Schnelle Bewegungen'], correct:1, cat:'training'},
+  {q:'Was bedeutet "Anlehnung" beim Reiten?', opts:['Der weiche, stetige Kontakt zwischen Reiterhand und Pferdemaul','Das feste Anziehen der Zügel','Ein Sattelgurt-Typ'], correct:0, cat:'training'},
+  {q:'Welche Gangart hat den Takt "1-2-3"?', opts:['Schritt','Galopp','Trab'], correct:1, cat:'training'},
+  {q:'Was ist die Aufgabe der äußeren Hilfen in der Wendung?', opts:['Das Pferd begrenzen und die Hinterhand steuern','Nur zum Antreiben','Sie werden nicht gebraucht'], correct:0, cat:'training'},
+  {q:'Wie nennt man die Rangordnung unter Pferden in der Herde?', opts:['Hierarchie/Rangordnung','Zufallsprinzip','Alphabetische Reihenfolge'], correct:0, cat:'training'},
+  {q:'Was sollte vor dem Aufsteigen immer kontrolliert werden?', opts:['Nur der Sattelgurt','Sattel, Gurt und Ausrüstung insgesamt','Nichts, direkt aufsteigen'], correct:1, cat:'training'},
+  {q:'Wofür steht die Reitfigur "Zirkel"?', opts:['Ein Kreis von festgelegter Größe in der Bahn','Ein Sprunghindernis','Eine Gangart'], correct:0, cat:'training'},
+  {q:'Was bedeutet "losgelassen" bei einem Pferd?', opts:['Ängstlich und angespannt','Entspannt und locker in der Muskulatur arbeitend','Schnell und hektisch'], correct:1, cat:'training'},
+  {q:'Warum ist Aufwärmen vor dem Reiten wichtig?', opts:['Bereitet Muskeln und Kreislauf von Pferd und Reiter vor','Ist reine Formsache','Nur bei Turnieren nötig'], correct:0, cat:'training'},
   {q:'Wie viel Wasser braucht ein Pferd täglich ungefähr?', opts:['ca. 5 Liter','ca. 30–50 Liter','ca. 200 Liter'], correct:1, cat:'fuetterung'},
   {q:'Was sollte den Großteil der Pferdefütterung ausmachen?', opts:['Kraftfutter','Raufutter (Heu)','Leckerlis'], correct:1, cat:'fuetterung'},
   {q:'Was ist vor intensivem Training beim Reiter sinnvoll?', opts:['Große Mahlzeit','Ausreichend Flüssigkeit & leichte Energie','Auf Essen verzichten'], correct:1, cat:'fuetterung'},
   {q:'Wie oft sollte ein Pferd grundsätzlich gefüttert werden?', opts:['1× täglich große Portion','Mehrere kleine Portionen über den Tag','Nur am Wochenende'], correct:1, cat:'fuetterung'},
+  {q:'Was liefert am zuverlässigsten lang anhaltende Energie?', opts:['Zucker/Süßigkeiten','Komplexe Kohlenhydrate (z. B. Vollkorn)','Kaffee'], correct:1, cat:'fuetterung'},
+  {q:'Wie viel Wasser sollte ein Erwachsener an einem normalen Tag ungefähr trinken?', opts:['0,5 Liter','ca. 1,5–2 Liter','5 Liter'], correct:1, cat:'fuetterung'},
+  {q:'Was passiert bei Flüssigkeitsmangel mit der Konzentration?', opts:['Sie verbessert sich','Sie lässt spürbar nach','Kein Einfluss'], correct:1, cat:'fuetterung'},
+  {q:'Welche Mahlzeit-Größe ist direkt vor intensivem Training sinnvoll?', opts:['Eine kleine, leicht verdauliche Portion','Eine große, fettreiche Mahlzeit','Gar nichts essen oder trinken'], correct:0, cat:'fuetterung'},
+  {q:'Was ist an Obst und Gemüse besonders wertvoll?', opts:['Nur der Geschmack','Vitamine, Mineralstoffe und Ballaststoffe','Sie machen am schnellsten satt'], correct:1, cat:'fuetterung'},
+  {q:'Warum sind Ballaststoffe wichtig?', opts:['Sie schmecken gut','Sie unterstützen eine gesunde Verdauung','Sie liefern die meiste Energie'], correct:1, cat:'fuetterung'},
+  {q:'Was ist eine gute Strategie gegen Heißhunger?', opts:['Mahlzeiten ganz auslassen','Regelmäßige, ausgewogene Mahlzeiten','Nur Süßes essen'], correct:1, cat:'fuetterung'},
+  {q:'Welche Rolle spielt Eiweiß (Protein) nach dem Training?', opts:['Keine besondere','Unterstützt die Regeneration der Muskulatur','Es macht müde'], correct:1, cat:'fuetterung'},
+  {q:'Was hilft am meisten, wenn ein Training mal nicht gut läuft?', opts:['Sofort aufgeben','Es als Lernchance sehen und dranbleiben','Sich selbst stark kritisieren'], correct:1, cat:'mindset'},
+  {q:'Was beschreibt eine "Wachstumsmentalität" (Growth Mindset) am besten?', opts:['Talent ist unveränderlich','Fähigkeiten lassen sich durch Übung entwickeln','Fehler sind zu vermeiden'], correct:1, cat:'mindset'},
+  {q:'Warum sind realistische Etappenziele hilfreich?', opts:['Sie sind unnötig','Sie machen Fortschritt sichtbar und halten motiviert','Sie bremsen nur'], correct:1, cat:'mindset'},
+  {q:'Wie wirkt sich Selbstvertrauen häufig auf die Leistung aus?', opts:['Kein Zusammenhang','Es kann Ruhe und Handlungssicherheit fördern','Es macht immer leichtsinnig'], correct:1, cat:'mindset'},
+  {q:'Was ist eine gesunde Reaktion auf einen Rückschlag?', opts:['Motivation komplett verlieren','Ursache reflektieren und weitermachen','Anderen die Schuld geben'], correct:1, cat:'mindset'},
+  {q:'Warum hilft es, sich auf den Prozess statt nur das Ergebnis zu fokussieren?', opts:['Ergebnisse zählen allein','Der Prozess ist beeinflussbar und hält langfristig motiviert','Es gibt keinen Unterschied'], correct:1, cat:'mindset'},
+  {q:'Was bewirkt regelmäßige Selbstreflexion nach dem Training?', opts:['Nichts Besonderes','Sie fördert bewusstes Lernen und Weiterentwicklung','Sie kostet nur Zeit'], correct:1, cat:'mindset'},
+  {q:'Warum ist Rumpfkraft nicht nur beim Reiten wichtig?', opts:['Ist überall irrelevant','Sie schützt den Rücken im ganzen Alltag','Nur für Sportler wichtig'], correct:1, cat:'fitness'},
+  {q:'Was bewirkt regelmäßige Bewegung langfristig für den Körper?', opts:['Nichts Messbares','Sie stärkt Herz-Kreislauf-System und Muskulatur','Nur kurzfristige Effekte'], correct:1, cat:'fitness'},
+  {q:'Warum ist Beweglichkeit (Mobility) im Alltag wertvoll?', opts:['Nur für Akrobaten wichtig','Sie beugt Verspannungen und Verletzungen vor','Sie hat keinen Nutzen'], correct:1, cat:'fitness'},
+  {q:'Warum ist gute Balance nicht nur beim Reiten nützlich?', opts:['Sie ist nur für Sport relevant','Sie schützt vor Stürzen im ganzen Leben, gerade im Alter','Kein Zusammenhang'], correct:1, cat:'fitness'},
+  {q:'Was bringt regelmäßiges Krafttraining für den Alltag?', opts:['Nur größere Muskeln zur Schau','Mehr Kraft und Stabilität für alltägliche Bewegungen','Es macht unbeweglicher'], correct:1, cat:'fitness'},
+  {q:'Warum ist Bewegung auch gut für die mentale Gesundheit?', opts:['Kein Zusammenhang','Sie kann Stress abbauen und die Stimmung heben','Nur für Leistungssportler relevant'], correct:1, cat:'fitness'},
+  {q:'Ab wann beginnt beim Menschen ohne Training oft ein verstärkter Muskelabbau?', opts:['Meist schon ab ca. 30 Jahren','Erst ab 70 Jahren','Muskelabbau passiert nie von selbst'], correct:0, cat:'fitness'},
+  {q:'Wie nennt man den altersbedingten Muskelabbau in der Fachsprache?', opts:['Sarkopenie','Osteoporose','Arthrose'], correct:0, cat:'fitness'},
+  {q:'Was hilft am wirksamsten gegen Muskelabbau im Alter?', opts:['Möglichst viel Schonung','Regelmäßiges Krafttraining und ausreichend Eiweiß','Nur mehr schlafen'], correct:1, cat:'fitness'},
+  {q:'Wie schnell kann sich spürbarer Muskelabbau bei völliger Inaktivität zeigen?', opts:['Erst nach mehreren Jahren','Schon innerhalb weniger Wochen','Das passiert nicht'], correct:1, cat:'fitness'},
+  {q:'Warum ist ausreichend Eiweiß beim Muskelerhalt wichtig?', opts:['Eiweiß ist dafür bedeutungslos','Es liefert die Bausteine für Muskelaufbau und -erhalt','Es baut Muskeln eher ab'], correct:1, cat:'fitness'},
 ];
 
 /* ============================= RENDER HELPERS ============================= */
@@ -535,6 +623,11 @@ function daysUntil(iso){
   if(diff<=0) return 'heute';
   if(diff===1) return 'morgen';
   return `in ${diff} Tagen`;
+}
+function needsBackupReminder(){
+  if(!S.lastBackupDate) return true;
+  const diff = Math.round((new Date(todayISO()+'T00:00:00') - new Date(S.lastBackupDate+'T00:00:00'))/86400000);
+  return diff >= 30;
 }
 function monthCostTotal(){
   const ym = todayISO().slice(0,7);
@@ -601,7 +694,8 @@ Nav.go = function(screen, param){
   Nav.current = screen;
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('on', n.dataset.nav===screen));
   const map = {home:Screens.home, training:Screens.training, care:Screens.care, costs:Screens.costs,
-    contacts:Screens.contacts, quiz:Screens.quiz, profile:Screens.profile, horse:Screens.horse, legal:Screens.legal};
+    contacts:Screens.contacts, quiz:Screens.quiz, profile:Screens.profile, horse:Screens.horse, legal:Screens.legal,
+    tournaments:Screens.tournaments};
   const navbar = document.getElementById('navbar');
   navbar.classList.toggle('hidden', !['home','training','care','costs','quiz'].includes(screen));
   (map[screen]||Screens.home)(param);
@@ -642,6 +736,9 @@ Screens.home = function(){
       <button class="add-chip" onclick="Nav.go('horse','new')">+</button>
     </div>
 
+    <div class="section-label">Deine Abzeichen</div>
+    <div class="badge-shelf">${renderBadgeShelf()}</div>
+
     <div class="train-week-card">
       <div class="tw-head"><div class="tw-title">Diese Woche trainiert</div><div class="tw-count">${wk.pferd+wk.reiter}×</div></div>
       <div class="tw-row">
@@ -663,6 +760,13 @@ Screens.home = function(){
       <div><b>${esc(nextAppt.title)} – ${daysUntil(nextAppt.date)}</b><span>${esc(horseName(nextAppt.horseId))} · Termin ${fmtDate(nextAppt.date)}${nextAppt.time?' · '+esc(nextAppt.time)+' Uhr':''}</span></div>
     </div>` : ''}
 
+    ${needsBackupReminder() ? `
+    <div class="backup-banner" onclick="Nav.go('legal')">
+      <div class="bb-ic">💾</div>
+      <div class="bb-text"><b>Daten sichern nicht vergessen</b><span>Deine Daten liegen nur auf diesem Handy – jetzt Backup erstellen</span></div>
+      <div class="bb-arrow">›</div>
+    </div>` : ''}
+
     <div class="section-label">Bereiche</div>
     <div class="fn-grid">
       <div class="fn-card" onclick="Nav.go('training')"><div class="ic">🏇</div><div><div class="tt">Training</div><div class="dd">Pferd & Reiter</div></div></div>
@@ -670,6 +774,7 @@ Screens.home = function(){
       <div class="fn-card" onclick="Nav.go('costs')"><div class="ic">💶</div><div><div class="tt">Kosten</div><div class="dd">Ausgaben im Blick</div></div></div>
       <div class="fn-card" onclick="Nav.go('contacts')"><div class="ic">📇</div><div><div class="tt">Kontakte</div><div class="dd">Stall, Ärzte & Co.</div></div></div>
       <div class="fn-card" onclick="Screens.nutritionInfo()"><div class="ic">🥕</div><div><div class="tt">Ernährung</div><div class="dd">Tipps Pferd & Du</div></div></div>
+      <div class="fn-card" onclick="Nav.go('tournaments')"><div class="ic">🏆</div><div><div class="tt">Meine Turniere</div><div class="dd">Turniertagebuch</div></div></div>
       <div class="fn-card wide" onclick="Nav.go('quiz')"><div class="ic">🎯</div><div><div class="tt">Tägliches Quiz</div><div class="dd">${quizDoneToday?'Heute schon erledigt ✓':'5 neue Fragen warten auf dich'}</div></div></div>
     </div>
 
@@ -691,6 +796,20 @@ function dotsRow(count,total,warnColor){
   return html;
 }
 function horseName(id){ const h=S.horses.find(x=>x.id===id); return h?h.name:'—'; }
+function renderBadgeShelf(){
+  return Object.entries(BADGE_DEFS).map(([id,b])=>{
+    const earned = S.quiz.badges.includes(id);
+    return `
+    <div class="badge-item">
+      <div class="badge-medal-outer">
+        <div class="badge-medal ${earned?'':'locked'}">${earned?b.icon:'🔒'}</div>
+        <div class="badge-tail badge-tail-l ${earned?'':'locked'}"></div>
+        <div class="badge-tail badge-tail-r ${earned?'':'locked'}"></div>
+      </div>
+      <div class="badge-label ${earned?'':'locked'}">${b.label}</div>
+    </div>`;
+  }).join('');
+}
 
 /* ---- PROFILE ---- */
 Screens.profile = function(){
@@ -1207,6 +1326,67 @@ Screens.newContact = function(){
   });
 };
 
+/* ---- TOURNAMENTS ---- */
+Screens.tournaments = function(){
+  const list = S.tournaments.slice().sort((a,b)=>b.date.localeCompare(a.date));
+  const rows = list.map(t=>`
+    <div class="tourn-card" onclick="Screens.tournamentEdit('${t.id}')">
+      ${t.photos && t.photos[0] ? `<img class="tourn-thumb" src="${t.photos[0]}">` : `<div class="tourn-thumb tourn-thumb-empty">🏆</div>`}
+      <div class="tourn-info">
+        <div class="tourn-loc">${esc(t.location)}</div>
+        <div class="tourn-meta">${fmtDate(t.date)}${t.placement?' · '+esc(t.placement):''}</div>
+        ${t.companions ? `<div class="tourn-comp">mit ${esc(t.companions)}</div>` : ''}
+      </div>
+    </div>`).join('') || `<div class="empty-hint">Noch keine Turniere eingetragen – dein erstes Turnier wartet auf einen Eintrag!</div>`;
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Meine Turniere</div></div>
+    ${rows}
+    <button class="add-contact" onclick="Screens.tournamentEdit('new')">+ Turnier hinzufügen</button>
+  `;
+};
+
+Screens.tournamentEdit = function(id){
+  const isNew = id==='new';
+  const existing = isNew ? null : S.tournaments.find(t=>t.id===id);
+  if(!isNew && !existing) return Nav.go('tournaments');
+  Nav.tournamentDraft = isNew
+    ? {id:uid(), location:'', date:todayISO(), companions:'', placement:'', notes:'', photos:[]}
+    : structuredClone(existing);
+  Screens.renderTournamentEdit(isNew);
+};
+Screens.renderTournamentEdit = function(isNew){
+  const t = Nav.tournamentDraft;
+  const photosHTML = t.photos.map((p,i)=>`
+    <div class="tourn-photo-thumb">
+      <img src="${p}">
+      <div class="tourn-photo-del" onclick="Screens.removeTournamentPhoto(${i})">✕</div>
+    </div>`).join('');
+  screenEl().innerHTML = `
+    <div class="back-row"><div class="back-btn" onclick="Nav.go('tournaments')">‹</div><div class="page-title">${isNew?'Turnier hinzufügen':'Turnier bearbeiten'}</div></div>
+    <div class="field"><label>Ort / Veranstaltung</label><input id="tr-location" value="${esc(t.location)}" placeholder="z. B. Turnierplatz Musterstadt"></div>
+    <div class="field"><label>Datum</label><input id="tr-date" type="date" value="${t.date}"></div>
+    <div class="field"><label>Wer war dabei?</label><input id="tr-companions" value="${esc(t.companions)}" placeholder="z. B. Trainerin Petra, Mama"></div>
+    <div class="field"><label>Platzierung</label><input id="tr-placement" value="${esc(t.placement)}" placeholder="z. B. 3. Platz"></div>
+    <div class="field"><label>Notizen</label><textarea id="tr-notes" placeholder="Wie ist es gelaufen?">${esc(t.notes)}</textarea></div>
+    <div class="field">
+      <label>Fotos</label>
+      <div class="tourn-photo-grid">
+        ${photosHTML}
+        <div class="tourn-photo-add photo-pick">
+          <span>+</span>
+          <input type="file" accept="image/*" multiple onchange="App.handleTournamentPhoto(event)">
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="App.saveTournament()">Speichern</button>
+    ${!isNew ? `<button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="App.deleteTournament('${t.id}')">Turnier löschen</button>` : ''}
+  `;
+};
+Screens.removeTournamentPhoto = function(i){
+  Nav.tournamentDraft.photos.splice(i,1);
+  Screens.renderTournamentEdit(!S.tournaments.find(x=>x.id===Nav.tournamentDraft.id));
+};
+
 /* ---- QUIZ ---- */
 function buildQuizSet(){
   const pool = KNOWLEDGE_QUESTIONS.slice();
@@ -1277,18 +1457,14 @@ Screens.nextQuiz = function(){
   }
 };
 function checkBadges(){
-  const thresholds = [{cat:'fuetterung', at:3, id:'fuetterung', label:'Fütterungs-Profi', icon:'🥕'},
-    {cat:'kosten', at:3, id:'kosten', label:'Kosten-Checker', icon:'💶'},
-    {cat:'training', at:5, id:'training', label:'Trainingswissen-Profi', icon:'🏆'}];
-  thresholds.forEach(t=>{
-    if((S.quiz.correctByCat[t.cat]||0) >= t.at && !S.quiz.badges.includes(t.id)) S.quiz.badges.push(t.id);
+  Object.entries(BADGE_DEFS).forEach(([id,b])=>{
+    if((S.quiz.correctByCat[b.cat]||0) >= b.at && !S.quiz.badges.includes(id)) S.quiz.badges.push(id);
   });
 }
 Screens.quizSummary = function(){
   const level = Math.max(1, Math.floor(S.quiz.points/50)+1);
   const pct = S.quiz.points%50/50*100;
-  const badgeDefs = {fuetterung:{icon:'🥕',label:'Fütterungs-Profi'}, kosten:{icon:'💶',label:'Kosten-Checker'}, training:{icon:'🏆',label:'Trainingswissen-Profi'}};
-  const badges = S.quiz.badges.map(b=>`<div class="badge-pill"><div class="bi">${badgeDefs[b].icon}</div><div class="bt">${badgeDefs[b].label}</div></div>`).join('')
+  const badges = S.quiz.badges.map(b=>`<div class="badge-pill"><div class="bi">${BADGE_DEFS[b].icon}</div><div class="bt">${BADGE_DEFS[b].label}</div></div>`).join('')
     || `<div class="empty-hint">Noch keine Auszeichnungen – beantworte weiter fleißig!</div>`;
   screenEl().innerHTML = `
     <div class="back-row"><div class="back-btn" onclick="Nav.go('home')">‹</div><div class="page-title">Tages-Quiz</div></div>
@@ -1313,7 +1489,15 @@ Screens.legal = function(){
     <div class="legal-block"><div class="lt">Kontakt zum Entwickler</div>
       <div class="dev-card"><div class="dev-avatar">DS</div><div class="dev-info"><div class="dn">Daniel Steinkuhl</div><div class="de">danielsbodymanufaktur@gmail.com</div></div></div></div>
     <div class="legal-block"><div class="lt">Datenschutz</div>
-      <p>Alle Angaben in dieser App werden ausschließlich lokal in deinem Konto gespeichert und nicht an Dritte weitergegeben.</p></div>
+      <p>Alle Daten dieser App (Profile, Training, Kosten, Turniere etc.) werden ausschließlich lokal auf diesem Gerät im Speicher deines Browsers abgelegt – nichts wird an einen Server übertragen oder an Dritte weitergegeben.</p></div>
+    <div class="legal-block"><div class="lt">Daten sichern & wiederherstellen</div>
+      <p>Da alles nur lokal gespeichert ist, gehen deine Daten bei einem neuen Handy, einem gelöschten Browser-Cache oder einer Neuinstallation verloren. Erstelle deshalb regelmäßig eine Sicherung.</p>
+      <button class="btn btn-ghost btn-block" onclick="App.exportData()">💾 Daten sichern (Backup)</button>
+      <div class="file-btn" style="margin-top:10px;">
+        <button class="btn btn-ghost btn-block">📂 Daten wiederherstellen</button>
+        <input type="file" accept="application/json" onchange="App.importDataFile(event)">
+      </div>
+    </div>
     <div class="legal-block"><div class="lt">Daten verwalten</div>
       <button class="btn btn-ghost btn-block" onclick="App.resetAll()">App-Daten zurücksetzen</button></div>
   `;
@@ -1374,6 +1558,59 @@ App.handleHorsePhoto = function(ev, id, isNew){
     Screens.horse(isNew?'new':id);
   };
   reader.readAsDataURL(file);
+};
+function resizeImageFile(file, maxDim, callback){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      let w = img.width, h = img.height;
+      if(w > h){ if(w > maxDim){ h = Math.round(h*maxDim/w); w = maxDim; } }
+      else{ if(h > maxDim){ w = Math.round(w*maxDim/h); h = maxDim; } }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL('image/jpeg', 0.75));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+App.handleTournamentPhoto = function(ev){
+  const files = Array.from(ev.target.files || []);
+  if(!files.length) return;
+  let remaining = files.length;
+  files.forEach(file=>{
+    resizeImageFile(file, 900, function(dataUrl){
+      Nav.tournamentDraft.photos.push(dataUrl);
+      remaining--;
+      if(remaining===0){
+        Screens.renderTournamentEdit(!S.tournaments.find(x=>x.id===Nav.tournamentDraft.id));
+      }
+    });
+  });
+};
+App.saveTournament = function(){
+  const location = document.getElementById('tr-location').value.trim();
+  if(!location){ Modal.toast('Bitte einen Ort eingeben.'); return; }
+  const t = Nav.tournamentDraft;
+  t.location = location;
+  t.date = document.getElementById('tr-date').value || todayISO();
+  t.companions = document.getElementById('tr-companions').value.trim();
+  t.placement = document.getElementById('tr-placement').value.trim();
+  t.notes = document.getElementById('tr-notes').value.trim();
+  const idx = S.tournaments.findIndex(x=>x.id===t.id);
+  if(idx>=0) S.tournaments[idx] = t; else S.tournaments.push(t);
+  saveState();
+  Nav.tournamentDraft = null;
+  Modal.toast('Turnier gespeichert!');
+  Nav.go('tournaments');
+};
+App.deleteTournament = function(id){
+  Modal.confirm('Diesen Turniereintrag wirklich löschen?', function(){
+    S.tournaments = S.tournaments.filter(t=>t.id!==id);
+    saveState(); Nav.tournamentDraft=null; Nav.go('tournaments');
+  });
 };
 App.saveProfile = function(){
   S.profile.name = document.getElementById('pf-name').value.trim() || S.profile.name;
@@ -1436,6 +1673,43 @@ App.resetAll = async function(){
     location.reload();
   });
 };
+App.exportData = function(){
+  try{
+    const dataStr = JSON.stringify(S, null, 2);
+    const blob = new Blob([dataStr], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'stallbuch-sicherung-' + todayISO() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+    S.lastBackupDate = todayISO();
+    saveState();
+    Modal.toast('Sicherung wird heruntergeladen …');
+  }catch(e){
+    Modal.toast('Sicherung konnte nicht erstellt werden.');
+  }
+};
+App.importDataFile = function(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    let parsed;
+    try{ parsed = JSON.parse(e.target.result); }
+    catch(err){ Modal.toast('Diese Datei konnte nicht gelesen werden.'); return; }
+    Modal.confirm('Aktuelle App-Daten durch diese Sicherung ersetzen? Nicht gesicherte aktuelle Daten gehen dabei verloren.', async function(){
+      S = Object.assign(structuredClone(DEFAULT_STATE), parsed);
+      await saveState();
+      Modal.toast('Daten wiederhergestellt!');
+      Nav.go('home');
+    });
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+};
 
 /* ============================= ONBOARDING ============================= */
 const Onb = { step:0, name:'', horseName:'' };
@@ -1443,7 +1717,7 @@ Onb.render = function(){
   const el = document.getElementById('onboarding');
   el.classList.remove('hidden');
   document.getElementById('navbar').classList.add('hidden');
-  const steps = [Onb.stepWelcome, Onb.stepName, Onb.stepHorse, Onb.stepTour];
+  const steps = [Onb.stepWelcome, Onb.stepName, Onb.stepHorse, Onb.stepTour, Onb.stepStorage];
   el.innerHTML = steps[Onb.step]();
 };
 Onb.progress = function(total){
@@ -1454,7 +1728,7 @@ Onb.progress = function(total){
 Onb.stepWelcome = function(){
   return `
     <div class="onb-helper">🧑‍🌾</div>
-    ${Onb.progress(4)}
+    ${Onb.progress(5)}
     <div class="onb-title">Hallo, ich bin Theo!</div>
     <div class="onb-sub">Dein Stallhelfer für die App</div>
     <div class="onb-bubble">Schön, dass du da bist! Ich zeig dir kurz, wie <b>Stallbuch</b> dir hilft, Training,
@@ -1467,7 +1741,7 @@ Onb.stepWelcome = function(){
 Onb.stepName = function(){
   return `
     <div class="onb-helper">🧑‍🌾</div>
-    ${Onb.progress(4)}
+    ${Onb.progress(5)}
     <div class="onb-title">Wie heißt du?</div>
     <div class="onb-bubble">Damit ich dich richtig begrüßen kann.</div>
     <div class="onb-field"><input id="onb-name" placeholder="Dein Name" value="${esc(Onb.name)}"></div>
@@ -1481,7 +1755,7 @@ Onb.stepName = function(){
 Onb.stepHorse = function(){
   return `
     <div class="onb-helper">🧑‍🌾</div>
-    ${Onb.progress(4)}
+    ${Onb.progress(5)}
     <div class="onb-title">Hast du ein Pferd?</div>
     <div class="onb-bubble">Leg gleich dein erstes Pferd an – Fotos und Details kannst du jederzeit später ergänzen.</div>
     <div class="onb-field"><input id="onb-horse" placeholder="Name deines Pferds" value="${esc(Onb.horseName)}"></div>
@@ -1496,19 +1770,35 @@ Onb.stepHorse = function(){
 Onb.stepTour = function(){
   return `
     <div class="onb-helper">🧑‍🌾</div>
-    ${Onb.progress(4)}
+    ${Onb.progress(5)}
     <div class="onb-title">Das erwartet dich</div>
     <ul class="onb-list">
       <li><span class="oi">🏇</span> <div><b>Training</b> – für dich und dein Pferd, inkl. Reithallen-Planer</div></li>
       <li><span class="oi">🩺</span> <div><b>Terminplanung</b> – Termine & Fütterung im Kalender</div></li>
       <li><span class="oi">💶</span> <div><b>Kosten</b> – mit Leitfaden für alle Grundausgaben</div></li>
       <li><span class="oi">📇</span> <div><b>Kontakte</b> – Stall, Ärzte & Co. griffbereit</div></li>
+      <li><span class="oi">🏆</span> <div><b>Meine Turniere</b> – Turniertagebuch mit Fotos</div></li>
       <li><span class="oi">🎯</span> <div><b>Tages-Quiz</b> – 5 Fragen täglich, macht schlauer</div></li>
     </ul>
     <div class="onb-bubble">Am wichtigsten: <b>Dein Reitertraining</b> nicht vergessen – mindestens 2× die Woche,
       dafür erinnere ich dich immer wieder auf der Startseite!</div>
     <div class="onb-spacer"></div>
-    <button class="btn btn-gold btn-block" onclick="Onb.finish()">Los geht's mit Stallbuch!</button>
+    <button class="btn btn-gold btn-block" onclick="Onb.next()">Weiter</button>
+  `;
+};
+Onb.stepStorage = function(){
+  return `
+    <div class="onb-helper">🧑‍🌾</div>
+    ${Onb.progress(5)}
+    <div class="onb-title">Ganz wichtig zum Schluss</div>
+    <div class="onb-bubble">Deine Daten liegen <b>ausschließlich auf diesem Handy</b> – nirgends sonst. Das ist gut
+      für deinen Datenschutz, heißt aber auch: Wird die App gelöscht oder wechselst du dein Handy, sind die
+      Daten sonst unwiederbringlich weg.</div>
+    <div class="onb-bubble"><b>Erstelle deshalb regelmäßig eine Sicherung</b> – du findest die Funktion jederzeit
+      unten im Bereich "Impressum & Kontakt" unter "Daten sichern & wiederherstellen". Ich erinnere dich hier
+      auf der Startseite auch von Zeit zu Zeit daran.</div>
+    <div class="onb-spacer"></div>
+    <button class="btn btn-gold btn-block" onclick="Onb.finish()">Verstanden, los geht's!</button>
   `;
 };
 Onb.next = function(){ Onb.step++; Onb.render(); };
